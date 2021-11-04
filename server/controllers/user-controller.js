@@ -78,7 +78,31 @@ registerUser = async (req, res) => {
     }
 }
 
+loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+        if(bcrypt.compare(password, existingUser.passwordHash)) {
+            // LOGIN THE USER
+            const token = auth.signToken(existingUser);
+            await res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none"
+            }).status(200).json({
+                success: true,
+                user: {
+                    firstName: existingUser.firstName,
+                    lastName: existingUser.lastName,
+                    email: existingUser.email
+                }
+            }).send();
+        }
+    }
+}
+
 module.exports = {
     getLoggedIn,
-    registerUser
+    registerUser,
+    loginUser
 }

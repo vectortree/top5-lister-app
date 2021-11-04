@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import AuthContext from '../auth'
-import Copyright from './Copyright'
+import AuthContext from '../auth';
+import Copyright from './Copyright';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,7 +15,7 @@ import { GlobalStoreContext } from '../store';
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
-    const { store } = useContext(GlobalStoreContext)
+    const { store } = useContext(GlobalStoreContext);
 
     const handleSubmit = (event) => {
         event.preventDefault();
