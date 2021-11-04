@@ -41,7 +41,6 @@ const apis = {
     updateTop5ListById,
     deleteTop5ListById,
     getTop5ListById,
-
     getLoggedIn,
     registerUser,
     loginUser,
