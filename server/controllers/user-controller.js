@@ -28,7 +28,7 @@ logoutUser = async (req, res) => {
 registerUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
-        if (!firstName || !lastName || !email || !password || !passwordVerify) {
+        if (firstName.trim() === "" || lastName.trim() === "" || email.trim() === "" || password.length === 0 || passwordVerify.length === 0) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
