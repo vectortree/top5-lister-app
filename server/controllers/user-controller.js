@@ -85,12 +85,13 @@ loginUser = async (req, res) => {
             return res.status(400).json({errorMessage: "Please enter an email and password."});
         else if(email.trim() === "")
             return res.status(400).json({errorMessage: "Please enter an email."});
-        else if(password.trim() === "")
+        else if(password.length === 0)
             return res.status(400).json({errorMessage: "Please enter a password."});
         else {
             const existingUser = await User.findOne({ email: email });
             if (existingUser) {
-                if(bcrypt.compare(password, existingUser.passwordHash)) {
+                const validPass = await bcrypt.compare(password, existingUser.passwordHash);
+                if(validPass) {
                     // LOGIN THE USER
                     const token = auth.signToken(existingUser);
                     await res.cookie("token", token, {

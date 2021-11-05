@@ -71,7 +71,7 @@ export default function AppBanner() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleLogout}><Link to='/logout/'>Logout</Link></MenuItem>
-        </Menu>        
+        </Menu>
 
     let editToolbar = "";
     let menu = loggedOutMenu;
@@ -83,7 +83,12 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
-        return <AccountCircle />;
+        if(!loggedIn)
+            return <AccountCircle />;
+        else {
+            let initials = auth.user.firstName.charAt(0).concat(auth.user.lastName.charAt(0));
+            return <Typography style={{ textDecoration: 'none', color: 'white', fontSize: 24}} >{initials}</Typography>
+        }
     }
 
     return (
