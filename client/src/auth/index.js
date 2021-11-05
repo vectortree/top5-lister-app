@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useHistory } from 'react-router-dom'
-import api from '../api'
+import { useHistory } from 'react-router-dom';
+import api from '../api';
+import LoginErrorModal from "../components/LoginErrorModal";
+import RegisterUserErrorModal from "../components/RegisterUserErrorModal";
 
 const AuthContext = createContext();
 console.log("create AuthContext: " + AuthContext);
@@ -8,13 +10,18 @@ console.log("create AuthContext: " + AuthContext);
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    REGISTER_USER_ERROR: "REGISTER_USER_ERROR",
+    LOGIN_ERROR: "LOGIN_ERROR"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        registerUserError: false,
+        loginError: false,
+        errorMsg: null
     });
     const history = useHistory();
 
@@ -28,14 +35,32 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    registerUserError: false,
+                    loginError: false
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    registerUserError: false,
+                    loginError: false
                 })
+            }
+            case AuthActionType.REGISTER_USER_ERROR: {
+                return setAuth({
+                    registerUserError: payload.registerUserError,
+                    loginError: false,
+                    errorMsg: payload.errorMsg
+                });
+            }
+            case AuthActionType.LOGIN_ERROR: {
+                return setAuth({
+                    registerUserError: false,
+                    loginError: payload.loginError,
+                    errorMsg: payload.errorMsg
+                });
             }
             default:
                 return auth;
@@ -56,40 +81,115 @@ function AuthContextProvider(props) {
     }
 
     auth.registerUser = async function(userData, store) {
-        const response = await api.registerUser(userData);      
-        if (response.status === 200) {
+        try {
+            const response = await api.registerUser(userData);      
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+                store.loadIdNamePairs();
+            }
+        }
+        catch(err) {
             authReducer({
-                type: AuthActionType.REGISTER_USER,
+                type: AuthActionType.REGISTER_USER_ERROR,
                 payload: {
-                    user: response.data.user
+                    registerUserError: true,
+                    errorMsg: err.response.data.errorMessage
                 }
             })
-            history.push("/");
-            store.loadIdNamePairs();
         }
     }
 
     auth.loginUser = async function(userData, store) {
-        const response = await api.loginUser(userData);
-        if (response.status === 200) {
+        try {
+            const response = await api.loginUser(userData);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+                store.loadIdNamePairs();
+            }
+        }
+        catch(err) {
             authReducer({
-                type: AuthActionType.REGISTER_USER,
+                type: AuthActionType.LOGIN_ERROR,
                 payload: {
-                    user: response.data.user
+                    loginError: true,
+                    errorMsg: err.response.data.errorMessage
                 }
             })
-            history.push("/");
-            store.loadIdNamePairs();
         }
+
     }
 
-    return (
-        <AuthContext.Provider value={{
-            auth
-        }}>
-            {props.children}
-        </AuthContext.Provider>
-    );
+    auth.setLoginError = function() {
+        authReducer({
+            type: AuthActionType.LOGIN_ERROR,
+            payload: {
+                loginError: false
+            }
+        })
+    }
+
+    auth.setRegisterUserError = function() {
+        authReducer({
+            type: AuthActionType.REGISTER_USER_ERROR,
+            payload: {
+                registerUserError: false
+            }
+        })
+    }
+
+    if(auth.loginError) {
+        return (
+            <div>
+                <LoginErrorModal
+                errorMsg={auth.errorMsg}
+                setLoginErrorCallback={auth.setLoginError}
+                loginError={auth.loginError}>
+                </LoginErrorModal>
+                <AuthContext.Provider value={{
+                    auth
+                }}>
+                    {props.children}
+                </AuthContext.Provider>
+            </div>
+        );
+    }
+    else if(auth.registerUserError) {
+        return (
+            <div>
+                <RegisterUserErrorModal
+                errorMsg={auth.errorMsg}
+                setRegisterUserErrorCallback={auth.setRegisterUserError}
+                registerUserError={auth.registerUserError}>
+                </RegisterUserErrorModal>
+                <AuthContext.Provider value={{
+                    auth
+                }}>
+                    {props.children}
+                </AuthContext.Provider>
+            </div>
+        );
+    }
+    else {
+        return (
+            <AuthContext.Provider value={{
+                auth
+            }}>
+                {props.children}
+            </AuthContext.Provider>
+        );
+    }
 }
 
 export default AuthContext;

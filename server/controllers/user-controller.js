@@ -79,25 +79,44 @@ registerUser = async (req, res) => {
 }
 
 loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
-        if(bcrypt.compare(password, existingUser.passwordHash)) {
-            // LOGIN THE USER
-            const token = auth.signToken(existingUser);
-            await res.cookie("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none"
-            }).status(200).json({
-                success: true,
-                user: {
-                    firstName: existingUser.firstName,
-                    lastName: existingUser.lastName,
-                    email: existingUser.email
+    try {
+        const { email, password } = req.body;
+        if(email.trim() === "" && password.length === 0)
+            return res.status(400).json({errorMessage: "Please enter an email and password."});
+        else if(email.trim() === "")
+            return res.status(400).json({errorMessage: "Please enter an email."});
+        else if(password.trim() === "")
+            return res.status(400).json({errorMessage: "Please enter a password."});
+        else {
+            const existingUser = await User.findOne({ email: email });
+            if (existingUser) {
+                if(bcrypt.compare(password, existingUser.passwordHash)) {
+                    // LOGIN THE USER
+                    const token = auth.signToken(existingUser);
+                    await res.cookie("token", token, {
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none"
+                    }).status(200).json({
+                        success: true,
+                        user: {
+                            firstName: existingUser.firstName,
+                            lastName: existingUser.lastName,
+                            email: existingUser.email
+                        }
+                    }).send();
                 }
-            }).send();
+                else {
+                    return res.status(400).json({ errorMessage: "Incorrect email and/or password." });
+                }
+            }
+            else {
+                return res.status(400).json({ errorMessage: "Incorrect email and/or password." });
+            }
         }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send();
     }
 }
 
