@@ -12,7 +12,8 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
     REGISTER_USER_ERROR: "REGISTER_USER_ERROR",
-    LOGIN_ERROR: "LOGIN_ERROR"
+    LOGIN_ERROR: "LOGIN_ERROR",
+    LOGOUT_USER: "LOGOUT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -48,6 +49,14 @@ function AuthContextProvider(props) {
                     loginError: false
                 })
             }
+            case AuthActionType.LOGOUT_USER: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: payload.loggedIn,
+                    registerUserError: false,
+                    loginError: false
+                })
+            }
             case AuthActionType.REGISTER_USER_ERROR: {
                 return setAuth({
                     registerUserError: payload.registerUserError,
@@ -71,10 +80,23 @@ function AuthContextProvider(props) {
         const response = await api.getLoggedIn();
         if (response.status === 200) {
             authReducer({
-                type: AuthActionType.SET_LOGGED_IN,
+                type: AuthActionType.GET_LOGGED_IN,
                 payload: {
                     loggedIn: response.data.loggedIn,
                     user: response.data.user
+                }
+            });
+        }
+    }
+
+    auth.logoutUser = async function () {
+        const response = await api.logoutUser();
+        if(response.status === 200) {
+            authReducer({
+                type: AuthActionType.LOGOUT_USER,
+                payload: {
+                    loggedIn: false,
+                    user: null
                 }
             });
         }
