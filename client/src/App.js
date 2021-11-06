@@ -1,6 +1,6 @@
 import './App.css';
 import { React } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { AuthContextProvider } from './auth';
 import { GlobalStoreContextProvider } from './store'
 import {
@@ -34,6 +34,7 @@ const App = () => {
                         <Route path="/logout/" exact component= {HomeWrapper} />
                         <Route path="/register/" exact component={RegisterScreen} />
                         <Route path="/top5list/:id" exact component={WorkspaceScreen} />
+                        <Redirect to="/" />
                     </Switch>
                     <Statusbar />
                 </GlobalStoreContextProvider>
