@@ -5,6 +5,7 @@ import api from '../api'
 import MoveItem_Transaction from '../transactions/MoveItem_Transaction'
 import UpdateItem_Transaction from '../transactions/UpdateItem_Transaction'
 import AuthContext from '../auth'
+import DeleteListModal from "../components/DeleteListModal"
 
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -305,7 +306,7 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
                     payload: top5List
                 });
-                history.push("/top5list/" + top5List._id);
+                history.push("/top5list/" + top5List._id, { data: top5List._id });
             }
         }
     }
@@ -391,11 +392,18 @@ function GlobalStoreContextProvider(props) {
     }
 
     return (
-        <GlobalStoreContext.Provider value={{
-            store
-        }}>
-            {props.children}
-        </GlobalStoreContext.Provider>
+        <div>
+            <DeleteListModal
+            listMarkedForDeletion={store.listMarkedForDeletion}
+            deleteMarkedListCallback={store.deleteMarkedList}
+            unmarkListForDeletionCallback={store.unmarkListForDeletion}>
+            </DeleteListModal>
+            <GlobalStoreContext.Provider value={{
+                store
+            }}>
+                {props.children}
+            </GlobalStoreContext.Provider>
+        </div>
     );
 }
 
