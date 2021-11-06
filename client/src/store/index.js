@@ -27,8 +27,10 @@ export const GlobalStoreActionType = {
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
+    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    SET_LIST_NAME_EDIT_NOT_ACTIVE: "SET_LIST_NAME_EDIT_NOT_ACTIVE",
     SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-    SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE"
+    SET_ITEM_EDIT_NOT_ACTIVE: "SET_ITEM_EDIT_NOT_ACTIVE",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -42,9 +44,13 @@ function GlobalStoreContextProvider(props) {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false,
-        itemActive: false,
-        listMarkedForDeletion: null
+        isListNameEditActive: false,
+        isItemEditActive: false,
+        listMarkedForDeletion: null,
+        undoButtonEnabled: false,
+        redoButtonEnabled: false,
+        closeButtonEnabled: false,
+        addListButtonEnabled: true
     });
     const history = useHistory();
 
@@ -64,7 +70,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -75,7 +85,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
                 })
             }
             // CREATE A NEW LIST
@@ -86,7 +100,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter + 1,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: true,
+                    addListButtonEnabled: true
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -97,7 +115,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -108,7 +130,11 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: payload
+                    listMarkedForDeletion: payload,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -119,18 +145,26 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
                 });
             }
             // UPDATE A LIST
             case GlobalStoreActionType.SET_CURRENT_LIST: {
                 return setStore({
                     idNamePairs: store.idNamePairs,
-                    currentList: payload,
+                    currentList: payload.currentList,
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: payload.undo,
+                    redoButtonEnabled: payload.redo,
+                    closeButtonEnabled: true,
+                    addListButtonEnabled: true
                 });
             }
             // START EDITING A LIST ITEM
@@ -141,7 +175,12 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: false,
                     isItemEditActive: true,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
+                    
                 });
             }
             // START EDITING A LIST NAME
@@ -152,7 +191,39 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     isListNameEditActive: true,
                     isItemEditActive: false,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: false
+                });
+            }
+            case GlobalStoreActionType.SET_LIST_NAME_EDIT_NOT_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: false,
+                    redoButtonEnabled: false,
+                    closeButtonEnabled: false,
+                    addListButtonEnabled: true
+                });
+            }
+            case GlobalStoreActionType.SET_ITEM_EDIT_NOT_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    isListNameEditActive: false,
+                    isItemEditActive: false,
+                    listMarkedForDeletion: null,
+                    undoButtonEnabled: payload.undo,
+                    redoButtonEnabled: payload.redo,
+                    closeButtonEnabled: true,
+                    addListButtonEnabled: true
                 });
             }
             default:
@@ -315,7 +386,11 @@ function GlobalStoreContextProvider(props) {
             if (response.data.success) {
                 storeReducer({
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
-                    payload: top5List
+                    payload: {
+                        currentList: top5List,
+                        undo: false,
+                        redo: false
+                    }
                 });
                 history.push("/top5list/" + top5List._id, { data: top5List._id });
             }
@@ -323,8 +398,10 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.addMoveItemTransaction = function (start, end) {
-        let transaction = new MoveItem_Transaction(store, start, end);
-        tps.addTransaction(transaction);
+        if(start != end) {
+            let transaction = new MoveItem_Transaction(store, start, end);
+            tps.addTransaction(transaction);
+        }
     }
 
     store.addUpdateItemTransaction = function (index, newText) {
@@ -363,9 +440,17 @@ function GlobalStoreContextProvider(props) {
     store.updateCurrentList = async function () {
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
         if (response.data.success) {
+            let undoButton = true;
+            let redoButton = true;
+            if(!tps.hasTransactionToUndo()) undoButton = false;
+            if(!tps.hasTransactionToRedo()) redoButton = false;
             storeReducer({
                 type: GlobalStoreActionType.SET_CURRENT_LIST,
-                payload: store.currentList
+                payload: {
+                    currentList: store.currentList,
+                    undo: undoButton,
+                    redo: redoButton
+                }
             });
         }
     }
@@ -399,6 +484,26 @@ function GlobalStoreContextProvider(props) {
         storeReducer({
             type: GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE,
             payload: null
+        });
+    }
+
+    store.setListNameEditNotActive = function () {
+        storeReducer({
+            type: GlobalStoreActionType.SET_LIST_NAME_EDIT_NOT_ACTIVE,
+            payload: null
+        });
+    }
+    store.setItemNameEditNotActive = function () {
+        let undoButton = true;
+        let redoButton = true;
+        if(!tps.hasTransactionToUndo()) undoButton = false;
+        if(!tps.hasTransactionToRedo()) redoButton = false;
+        storeReducer({
+            type: GlobalStoreActionType.SET_ITEM_EDIT_NOT_ACTIVE,
+            payload: {
+                undo: undoButton,
+                redo: redoButton
+            }
         });
     }
 

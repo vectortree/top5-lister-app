@@ -70,6 +70,7 @@ function Top5Item(props) {
         if (newActive) {
             store.setIsItemEditActive();
         }
+        else store.setItemNameEditNotActive();
         setEditActive(newActive);
     }
 
