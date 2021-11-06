@@ -53,7 +53,10 @@ function ListCard(props) {
         }
     }
     function handleUpdateText(event) {
-        setText(event.target.value);
+        let text = event.target.value.trim();
+        if(text !== "")
+            setText(text);
+        else setText(idNamePair.name);
     }
 
     let cardElement =

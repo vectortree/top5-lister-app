@@ -176,7 +176,18 @@ function GlobalStoreContextProvider(props) {
                     async function getListPairs(top5List) {
                         response = await api.getTop5ListPairs();
                         if (response.data.success) {
-                            let pairsArray = response.data.idNamePairs;
+                            let top5Lists = response.data.top5Lists;
+                            let pairsArray = [];
+                            for (let key in top5Lists) {
+                                let list = top5Lists[key];
+                                if(auth.user.email === list.ownerEmail) {
+                                    let pair = {
+                                        _id: list._id,
+                                        name: list.name,
+                                    };
+                                    pairsArray.push(pair);
+                                }
+                            }
                             storeReducer({
                                 type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                 payload: {
@@ -241,7 +252,7 @@ function GlobalStoreContextProvider(props) {
                 if(auth.user.email === list.ownerEmail) {
                     let pair = {
                         _id: list._id,
-                        name: list.name
+                        name: list.name,
                     };
                     pairsArray.push(pair);
                 }
