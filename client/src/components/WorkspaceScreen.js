@@ -18,7 +18,7 @@ function WorkspaceScreen() {
 
     
     useEffect(() => {
-        if(store.currentList == null || store.currentList.ownerEmail !== auth.user.email) {
+        if(store.currentList === null || store.currentList.ownerEmail !== auth.user.email) {
             let data = store.history.location.state?.data;
             if(data) store.setCurrentList(data);
             else store.history.push("/");

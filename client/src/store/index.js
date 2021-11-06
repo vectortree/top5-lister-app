@@ -392,18 +392,16 @@ function GlobalStoreContextProvider(props) {
     }
 
     return (
-        <div>
+        <GlobalStoreContext.Provider value={{
+            store
+        }}>
             <DeleteListModal
             listMarkedForDeletion={store.listMarkedForDeletion}
             deleteMarkedListCallback={store.deleteMarkedList}
             unmarkListForDeletionCallback={store.unmarkListForDeletion}>
             </DeleteListModal>
-            <GlobalStoreContext.Provider value={{
-                store
-            }}>
-                {props.children}
-            </GlobalStoreContext.Provider>
-        </div>
+            {props.children}
+        </GlobalStoreContext.Provider>
     );
 }
 
