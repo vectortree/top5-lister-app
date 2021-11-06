@@ -233,7 +233,18 @@ function GlobalStoreContextProvider(props) {
     store.loadIdNamePairs = async function () {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
-            let pairsArray = response.data.idNamePairs;
+            let top5Lists = response.data.top5Lists;
+            let pairsArray = [];
+            for (let key in top5Lists) {
+                let list = top5Lists[key];
+                if(auth.user.email === list.ownerEmail) {
+                    let pair = {
+                        _id: list._id,
+                        name: list.name
+                    };
+                    pairsArray.push(pair);
+                }
+            }
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: pairsArray
