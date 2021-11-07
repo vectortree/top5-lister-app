@@ -36,7 +36,7 @@ export default function RegisterUserErrorModal(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-          <Alert severity="warning">Registration error</Alert>
+          <Alert severity="warning">Registration Error</Alert>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {errorMsg}

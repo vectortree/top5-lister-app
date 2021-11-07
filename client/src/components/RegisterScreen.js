@@ -1,5 +1,7 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import AuthContext from '../auth';
+import { Redirect } from 'react-router-dom';
 import Copyright from './Copyright';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -12,10 +14,12 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GlobalStoreContext } from '../store';
+import HomeScreen from './HomeScreen';
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext);
+    store.history = useHistory();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,8 +32,9 @@ export default function RegisterScreen() {
             passwordVerify: formData.get('passwordVerify')
         }, store);
     };
-
-    return (
+    let registerScreen = <Redirect to="/" />;
+    if(!auth.loggedIn) {
+        registerScreen =
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -120,6 +125,9 @@ export default function RegisterScreen() {
                     </Box>
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
-            </Container>
+            </Container>;
+    }
+    return (
+        registerScreen
     );
 }

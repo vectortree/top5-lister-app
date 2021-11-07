@@ -36,7 +36,7 @@ export default function LoginErrorModal(props) {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-          <Alert severity="warning">Login error</Alert>
+          <Alert severity="warning">Login Error</Alert>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
            {errorMsg}
