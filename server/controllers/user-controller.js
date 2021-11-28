@@ -33,8 +33,8 @@ logoutUser = async (req, res) => {
 
 registerUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, passwordVerify } = req.body;
-        if (firstName.trim() === "" || lastName.trim() === "" || email.trim() === "" || password.length === 0 || passwordVerify.length === 0) {
+        const { firstName, lastName, userName, email, password, passwordVerify } = req.body;
+        if (firstName.trim() === "" || lastName.trim() === "" || userName.trim() === "" || email.trim() === "" || password.length === 0 || passwordVerify.length === 0) {
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
@@ -53,13 +53,30 @@ registerUser = async (req, res) => {
                     errorMessage: "Please enter the same password twice."
                 })
         }
-        const existingUser = await User.findOne({ email: email });
-        if (existingUser) {
+        const existingEmail = await User.findOne({ email: email });
+        const existingUser = await User.findOne({ userName: userName });
+        if (!existingUser && existingEmail) {
             return res
                 .status(400)
                 .json({
                     success: false,
                     errorMessage: "An account with this email address already exists."
+                })
+        }
+        else if (existingUser && !existingEmail) {
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    errorMessage: "An account with this username already exists."
+                })
+        }
+        else if (existingUser && existingEmail) {
+            return res
+                .status(400)
+                .json({
+                    success: false,
+                    errorMessage: "Both the provided username and email address have already been taken."
                 })
         }
 
@@ -68,7 +85,7 @@ registerUser = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            firstName, lastName, email, passwordHash
+            firstName, lastName, userName, email, passwordHash
         });
         const savedUser = await newUser.save();
 
@@ -84,6 +101,7 @@ registerUser = async (req, res) => {
             user: {
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,
+                userName: savedUser.userName,
                 email: savedUser.email
             }
         }).send();

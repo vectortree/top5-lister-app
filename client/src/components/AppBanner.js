@@ -25,6 +25,8 @@ export default function AppBanner() {
     };
 
     const handleMenuClose = () => {
+        if(auth.loggedInAsGuest)
+            auth.logoutAsGuest();
         setAnchorEl(null);
     };
 
@@ -98,7 +100,7 @@ export default function AppBanner() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}                        
                     >
-                        <Link style={{ textDecoration: 'none', color: '#d8ac34', fontSize: 40, fontWeight: '500'}} to='/'>T<sup>5</sup>L</Link>
+                        <Link style={{ textDecoration: 'none', color: '#d8ac34', fontSize: 40, fontWeight: '500'}} to='/' onClick={() => auth.loggedInAsGuest ? auth.logoutAsGuest() : null}>T<sup>5</sup>L</Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}>{}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

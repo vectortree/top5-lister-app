@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import AuthContext from '../auth';
+import { useContext } from 'react';
 
 export default function SplashScreen() {
+    const { auth } = useContext(AuthContext);
     return (
         <div id="splash-screen">
             <div id="title">
@@ -9,7 +12,7 @@ export default function SplashScreen() {
             </div>
             <div id="description">
                 A category-based item-ranking system and a space where people can freely <br/>
-                share and discuss their preferences and opinions on any topic
+                share and discuss their preferences and opinions on any topic!
             </div>
             <div id="welcome-screen-button-1">
                 <Link to="/register/">Create New Account</Link>
@@ -18,7 +21,11 @@ export default function SplashScreen() {
                 <Link to="/login/">Login</Link>
             </div>
             <div id="welcome-screen-button-3">
-                <Link to="/homescreen/">Continue as Guest</Link>
+                <Link
+                to="/"
+                onClick={() => auth.loginAsGuest()}>
+                    Continue as Guest
+                </Link>
             </div>
             <div id="welcome-screen-footer">
                 Developed by Starr Xu
