@@ -52,7 +52,7 @@ export default function SignInSide() {
   if(!auth.loggedIn) {
     signInSide =
       <ThemeProvider theme={theme}>
-          <Grid container component="main" sx={{ height: '100vh' }}>
+          <Grid container component="main" sx={{ height: '91.1%' }}>
             <CssBaseline />
             <Grid
               item

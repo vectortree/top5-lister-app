@@ -25,10 +25,14 @@ export default function AppBanner() {
     };
 
     const handleMenuClose = () => {
-        if(auth.loggedInAsGuest)
-            auth.logoutAsGuest();
         setAnchorEl(null);
     };
+
+    const handleClick = () => {
+        if(auth.loggedInAsGuest)
+            auth.logoutAsGuest();
+        handleMenuClose();
+    }
 
     const handleLogout = () => {
         handleMenuClose();
@@ -52,9 +56,9 @@ export default function AppBanner() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem component={Link} to='/register/' style={{ height: 25 }} onClick={handleMenuClose}>Create New Account</MenuItem>
+            <MenuItem component={Link} to='/register/' style={{ height: 25 }} onClick={handleClick}>Create New Account</MenuItem>
             <Divider style={{ background: 'black' }}/>
-            <MenuItem component={Link} to='/login/' style={{ height: 25 }} onClick={handleMenuClose}>Login</MenuItem>
+            <MenuItem component={Link} to='/login/' style={{ height: 25 }} onClick={handleClick}>Login</MenuItem>
         </Menu>
     );
     const loggedInMenu = 
