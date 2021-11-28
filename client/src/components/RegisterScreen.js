@@ -2,19 +2,31 @@ import { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import AuthContext from '../auth';
 import { Redirect } from 'react-router-dom';
-import Copyright from './Copyright';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GlobalStoreContext } from '../store';
 import HomeScreen from './HomeScreen';
+import { Link } from 'react-router-dom';
+
+function Copyright(props) {
+    return (
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        {'Copyright © '}
+        <Link to="/">
+          The Top 5 Lister
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
@@ -117,9 +129,7 @@ export default function RegisterScreen() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/login/" variant="body2">
-                                    Already have an account? Sign in
-                                </Link>
+                                <Link to='/login/'>Already have an account? Sign in</Link>
                             </Grid>
                         </Grid>
                     </Box>

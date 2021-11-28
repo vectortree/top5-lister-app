@@ -13,16 +13,18 @@ export const AuthActionType = {
     REGISTER_USER: "REGISTER_USER",
     REGISTER_USER_ERROR: "REGISTER_USER_ERROR",
     LOGIN_ERROR: "LOGIN_ERROR",
-    LOGOUT_USER: "LOGOUT_USER"
+    LOGOUT_USER: "LOGOUT_USER",
+    LOGIN_AS_GUEST: "LOGIN_AS_GUEST"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
         loggedIn: false,
+        loggedInAsGuest: false,
         registerUserError: false,
         loginError: false,
-        errorMsg: null
+        errorMsg: null,
     });
     const history = useHistory();
 
@@ -71,9 +73,21 @@ function AuthContextProvider(props) {
                     errorMsg: payload.errorMsg
                 });
             }
+            case AuthActionType.LOGIN_AS_GUEST: {
+                return setAuth({
+                    loggedInAsGuest: true
+                });
+            }
             default:
                 return auth;
         }
+    }
+
+    auth.loginAsGuest = function() {
+        authReducer({
+            type: AuthActionType.LOGIN_AS_GUEST,
+            payload: null
+        });
     }
 
     auth.getLoggedIn = async function () {
