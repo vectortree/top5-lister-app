@@ -90,7 +90,7 @@ export default function AppBanner() {
             return <AccountCircleOutlinedIcon style={{ fill: "black", fontSize: 40}} />;
         else {
             let initials = auth.user.firstName.charAt(0).concat(auth.user.lastName.charAt(0));
-            return <Fab size="small" style={{textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>
+            return <Fab size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>
         }
     }
 
