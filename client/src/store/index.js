@@ -250,30 +250,37 @@ function GlobalStoreContextProvider(props) {
             async function updateList(top5List) {
                 response = await api.updateTop5ListById(top5List._id, top5List);
                 if (response.data.success) {
-                    async function getListPairs(top5List) {
-                        response = await api.getTop5ListPairs();
+                    async function getAllLists(top5List) {
+                        response = await api.getAllTop5Lists();
                         if (response.data.success) {
                             let top5Lists = response.data.top5Lists;
-                            let pairsArray = [];
+                            let lists = [];
                             for (let key in top5Lists) {
                                 let list = top5Lists[key];
                                 if(auth.user.email === list.ownerEmail) {
-                                    let pair = {
+                                    let info = {
                                         _id: list._id,
                                         name: list.name,
+                                        items: list.items,
+                                        ownerEmail: list.ownerEmail,
+                                        userName: list.userName,
+                                        numberOfLikes: list.numberOfLikes,
+                                        numberOfDislikes: list.numberOfDislikes,
+                                        publishedDate: list.publishedDate,
+                                        comments: list.comments,
+                                        isPublished: list.isPublished
+                                        
                                     };
-                                    pairsArray.push(pair);
+                                    lists.push(info);
                                 }
                             }
                             storeReducer({
                                 type: GlobalStoreActionType.CHANGE_LIST_NAME,
-                                payload: {
-                                    lists: pairsArray
-                                }
+                                payload: lists
                             });
                         }
                     }
-                    getListPairs(top5List);
+                    getAllLists(top5List);
                 }
             }
             updateList(top5List);
@@ -326,23 +333,32 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadLists = async function () {
-        const response = await api.getTop5ListPairs();
+        const response = await api.getAllTop5Lists();
         if (response.data.success) {
             let top5Lists = response.data.top5Lists;
-            let pairsArray = [];
+            let lists = [];
             for (let key in top5Lists) {
                 let list = top5Lists[key];
                 if(auth.user.email === list.ownerEmail) {
-                    let pair = {
+                    let info = {
                         _id: list._id,
                         name: list.name,
+                        items: list.items,
+                        ownerEmail: list.ownerEmail,
+                        userName: list.userName,
+                        numberOfLikes: list.numberOfLikes,
+                        numberOfDislikes: list.numberOfDislikes,
+                        publishedDate: list.publishedDate,
+                        comments: list.comments,
+                        isPublished: list.isPublished
+                        
                     };
-                    pairsArray.push(pair);
+                    lists.push(info);
                 }
             }
             storeReducer({
                 type: GlobalStoreActionType.LOAD_LISTS,
-                payload: pairsArray
+                payload: lists
             });
         }
         else {

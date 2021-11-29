@@ -72,20 +72,20 @@ function ListCard(props) {
     if(!list.isPublished && !isExpanded)
         cardElement =
         <Card
-            color={"#fffcf4"}
             id={list._id}
             key={list._id}
             sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             disabled={store.isListNameEditActive}
             style={{
                 fontSize: '20pt',
-                borderRadius: 15
+                borderRadius: 15,
+                backgroundColor: "#fffcf4"
             }}
         >
             <Box sx={{ pl: 1, flexGrow: 1 }}>
                 <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                 <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: {list.userName}</Typography>
-                <Link onClick={(event) => {handleLoadList(event, list._id)}} to={"/top5list/${list._id}"}><Typography variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography></Link>
+                <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
             </Box>
                 <Box>
                     <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
@@ -103,34 +103,38 @@ function ListCard(props) {
     if(!list.isPublished && isExpanded)
     cardElement =
         <Card
-            color={"#fffcf4"}
             id={list._id}
             key={list._id}
             sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             disabled={store.isListNameEditActive}
             style={{
                 fontSize: '20pt',
-                borderRadius: 15
+                borderRadius: 15,
+                backgroundColor: "#fffcf4"
             }}
         >
             <Box sx={{ pl: 1, flexGrow: 1 }}>
                 <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                 <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: {list.userName}</Typography>
                 <Card
-                    color={"#fffcf4"}
                     id={list._id}
                     key={list._id}
                     sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                     disabled={store.isListNameEditActive}
                     style={{
                         fontSize: '20pt',
-                        borderRadius: 15
+                        borderRadius: 15,
+                        backgroundColor: "#302c74"
                     }}>
                     {
-                        
+                        list.items.map((item, index) => (
+                            <Box>
+                                <Typography color="#d8ac34" variant="h3">{index + ' ' + item + '\n'}</Typography>
+                            </Box>
+                        ))
                     }
                 </Card>
-                <Link onClick={(event) => {handleLoadList(event, list._id)}} to={"/top5list/${list._id}"}><Typography variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography></Link>
+                <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
             </Box>
                 <Box sx={{ p: 1 }}>
                     <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
