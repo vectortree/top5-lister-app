@@ -90,13 +90,31 @@ export default function AppBanner() {
             return <AccountCircleOutlinedIcon style={{ fill: "black", fontSize: 40}} />;
         else {
             let initials = auth.user.firstName.charAt(0).concat(auth.user.lastName.charAt(0));
-            return <Fab size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>
+            return <Fab onClick={handleProfileMenuOpen} size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>
         }
+    }
+
+    let accountMenu =
+        <IconButton
+        size="large"
+        edge="end"
+        aria-label="account of current user"
+        aria-controls={menuId}
+        aria-haspopup="true"
+        onClick={handleProfileMenuOpen}
+        color="inherit"
+        >
+        { <AccountCircleOutlinedIcon style={{ fill: "black", fontSize: 40}} />}
+        </IconButton>;
+    if(auth.loggedIn) {
+        let initials = auth.user.firstName.charAt(0).concat(auth.user.lastName.charAt(0));
+        accountMenu =
+            <Fab onClick={handleProfileMenuOpen} size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>;
     }
 
     return (
         <Box>
-            <AppBar style={{ backgroundColor: '#e8e4e4' }} position="static">
+            <AppBar style={{ backgroundColor: '#e8e4e4' }} position="relative">
                 <Toolbar>
                     <Typography                        
                         variant="h4"
@@ -108,17 +126,7 @@ export default function AppBanner() {
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}>{}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            { getAccountMenu(auth.loggedIn) }
-                        </IconButton>
+                        { accountMenu }
                     </Box>
                 </Toolbar>
             </AppBar>

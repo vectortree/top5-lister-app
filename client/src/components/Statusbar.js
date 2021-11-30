@@ -28,11 +28,11 @@ function Statusbar() {
                     size="small"
                     edge="end"
                     color="inherit"
-                    disabled={store.isListNameEditActive}
+                    disabled={store.currentList != null}
                     onClick={handleCreateNewList}>
                     <AddOutlinedIcon style={{ fontSize: 60 }} />
                 </IconButton>
-                <Typography variant="h2">Your Lists</Typography>
+                <Typography color={store.currentList != null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
                 <Typography variant="h4">{text}</Typography>
             </div>
         );

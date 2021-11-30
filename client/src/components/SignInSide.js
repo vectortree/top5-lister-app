@@ -33,8 +33,6 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
-
 export default function SignInSide() {
   const { auth } = useContext(AuthContext);
   const { store } = useContext(GlobalStoreContext);
@@ -52,12 +50,11 @@ export default function SignInSide() {
   let signInSide = <Redirect to="/" />;
   if(!auth.loggedIn) {
     signInSide =
-    <ThemeProvider theme={theme}>
+    <Box style={{ backgroundColor: 'white'}}>
+      <Box style={{paddingTop: "4.5%"}} ></Box>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -109,7 +106,8 @@ export default function SignInSide() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-    </ThemeProvider>
+      <Box style={{paddingBottom: "4.5%"}} ></Box>
+    </Box>
   }
 
   return (

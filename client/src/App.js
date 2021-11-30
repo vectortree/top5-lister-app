@@ -27,7 +27,7 @@ const App = () => {
         <BrowserRouter>
             <AuthContextProvider>
                 <GlobalStoreContextProvider>        
-                    <AppBanner />
+                    <AppBanner/>
                     <Switch>
                         <Route path="/" exact component={HomeWrapper} />
                         <Route path="/login/" exact component= {SignInSide} />
@@ -36,7 +36,6 @@ const App = () => {
                         <Route path="/top5list/:id" exact component={WorkspaceScreen} />
                         <Redirect to="/" />
                     </Switch>
-                    <Statusbar />
                 </GlobalStoreContextProvider>
             </AuthContextProvider>
         </BrowserRouter>

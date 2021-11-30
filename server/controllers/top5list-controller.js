@@ -11,7 +11,7 @@ createTop5List = (req, res) => {
 
     const top5List = new Top5List(body);
     console.log("creating top5List: " + JSON.stringify(top5List));
-    if (!top5List) {
+    if (top5List == null) {
         return res.status(400).json({ success: false, error: err })
     }
 
@@ -105,7 +105,7 @@ getTop5Lists = async (req, res) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        if (!top5Lists.length) {
+        if (!top5Lists) {
             return res
                 .status(404)
                 .json({ success: false, error: `Top 5 Lists not found` })

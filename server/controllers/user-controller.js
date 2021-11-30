@@ -11,6 +11,7 @@ getLoggedIn = async (req, res) => {
                 user: {
                     firstName: loggedInUser.firstName,
                     lastName: loggedInUser.lastName,
+                    userName: loggedInUser.userName,
                     email: loggedInUser.email
                 }
             }).send();
@@ -89,9 +90,6 @@ registerUser = async (req, res) => {
         });
         const savedUser = await newUser.save();
 
-        // LOGIN THE USER
-        const token = auth.signToken(savedUser);
-
         await res.cookie("token", token, {
             httpOnly: true,
             secure: true,
@@ -136,7 +134,8 @@ loginUser = async (req, res) => {
                         user: {
                             firstName: existingUser.firstName,
                             lastName: existingUser.lastName,
-                            email: existingUser.email
+                            userName: existingUser.userName,
+                            email: existingUser.email,
                         }
                     }).send();
                 }

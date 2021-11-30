@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Grid from '@mui/material/Grid';
 
 
 /*
@@ -74,69 +75,88 @@ function ListCard(props) {
         <Card
             id={list._id}
             key={list._id}
-            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            sx={{ width: {
+                sx: 1.0,
+                md: 1210,
+              }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             disabled={store.isListNameEditActive}
             style={{
                 fontSize: '20pt',
                 borderRadius: 15,
-                backgroundColor: "#fffcf4"
+                backgroundColor: "#fffcf4",
             }}
         >
-            <Box sx={{ pl: 1, flexGrow: 1 }}>
-                <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: {list.userName}</Typography>
-                <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
-            </Box>
-                <Box>
-                    <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
-                        handleDeleteList(event, list._id)
-                    }} aria-label='delete'>
-                        <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
-                    </IconButton>
-                </Box>
-                <Box style={{ alignSelf: "end" }}>
-                    <IconButton disableRipple={true} onClick={() => setExpanded(true)}>
-                        <KeyboardArrowDownIcon style={{fontSize:'30pt'}} />
-                    </IconButton>
-                </Box>
+            <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
+                <Grid item>       
+                    <Box sx={{ pl: 1, flexGrow: 1 }}>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                        <Typography component={Link} to='#' onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
+                    </Box>
+                </Grid>
+                <Grid item>
+                    <Box>
+                        <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
+                            handleDeleteList(event, list._id)
+                        }} aria-label='delete'>
+                            <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                    </Box>
+                    <Box style={{ alignSelf: "end" }}>
+                        <IconButton disableRipple={true} onClick={() => setExpanded(true)}>
+                            <KeyboardArrowDownIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                    </Box>
+                </Grid>
+            </Grid>
         </Card>;
     if(!list.isPublished && isExpanded)
     cardElement =
         <Card
             id={list._id}
             key={list._id}
-            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            sx={{ width: {
+                xs: 1.0,
+                md: 1210,
+              }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             disabled={store.isListNameEditActive}
             style={{
                 fontSize: '20pt',
                 borderRadius: 15,
-                backgroundColor: "#fffcf4"
+                backgroundColor: "#fffcf4",
+                alignItems: "flex-start"
             }}
         >
             <Box sx={{ pl: 1, flexGrow: 1 }}>
                 <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: {list.userName}</Typography>
+                <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                 <Card
                     id={list._id}
                     key={list._id}
-                    sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                    sx={{ width: {
+                        xs: 1.0,
+                        md: 1000,
+                      }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                     disabled={store.isListNameEditActive}
                     style={{
                         fontSize: '20pt',
                         borderRadius: 15,
-                        backgroundColor: "#302c74"
+                        backgroundColor: "#302c74",
+                        alignItems: "center"
                     }}>
                     {
-                        list.items.map((item, index) => (
-                            <Box>
-                                <Typography color="#d8ac34" variant="h3">{index + ' ' + item + '\n'}</Typography>
-                            </Box>
-                        ))
+                        <Box sx={{pl: 1, flexGrow: 1 }}>
+                        <Typography color="#d8ac34" variant="h3">{'1. ' + list.items[0]}</Typography>
+                        <Typography color="#d8ac34" variant="h3">{'2. ' + list.items[1]}</Typography>
+                        <Typography color="#d8ac34" variant="h3">{'3. ' + list.items[2]}</Typography>
+                        <Typography color="#d8ac34" variant="h3">{'4. ' + list.items[3]}</Typography>
+                        <Typography color="#d8ac34" variant="h3">{'5. ' + list.items[4]}</Typography>
+                    </Box>
                     }
                 </Card>
                 <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
             </Box>
-                <Box sx={{ p: 1 }}>
+                <Box>
                     <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
                         handleDeleteList(event, list._id)
                     }} aria-label='delete'>

@@ -305,8 +305,8 @@ function GlobalStoreContextProvider(props) {
         let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
+            userName: auth.user.userName,
             ownerEmail: auth.user.email,
-            userName: auth.user.email,
             numberOfLikes: 0,
             numberOfDislikes: 0,
             publishedDate: newDate,
