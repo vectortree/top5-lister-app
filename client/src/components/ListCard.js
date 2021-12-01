@@ -8,11 +8,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Fab, Typography } from '@mui/material';
 import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import { Link } from 'react-router-dom';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Grid from '@mui/material/Grid';
+import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
+import AuthContext from '../auth';
+import moment from 'moment';
+import List from '@mui/material/List';
 
 
 /*
@@ -24,7 +30,7 @@ import Grid from '@mui/material/Grid';
 */
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
-    const [editActive, setEditActive] = useState(false);
+    const { auth } = useContext(AuthContext);
     const [isExpanded, setExpanded] = useState(false);
     const [text, setText] = useState("");
     const { list } = props;
@@ -36,20 +42,6 @@ function ListCard(props) {
         }
     }
 
-    function handleToggleEdit(event) {
-        event.stopPropagation();
-        toggleEdit();
-    }
-
-    function toggleEdit() {
-        let newActive = !editActive;
-        if (newActive) {
-            store.setIsListNameEditActive();
-        }
-        else store.setListNameEditNotActive();
-        setEditActive(newActive);
-    }
-
     async function handleDeleteList(event, id) {
         event.stopPropagation();
         store.markListForDeletion(id);
@@ -57,16 +49,86 @@ function ListCard(props) {
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
-            let id = event.target.id.substring("list-".length);
-            store.changeListName(id, text);
-            toggleEdit();
+            let comment = text.trim();
+            if (comment !== "") {
+                let pair = {
+                    key: auth.user.userName,
+                    value: comment
+                };
+                setText("");
+                list.comments.push(pair);
+                store.updateList(list);
+            }
         }
     }
-    function handleUpdateText(event) {
-        let text = event.target.value.trim();
-        if(text !== "")
-            setText(text);
-        else setText(list.name);
+
+    function handleChange(event) {
+        let text = event.target.value;
+        setText(text);
+    }
+
+    function handleIncrementViewCount() {
+        setExpanded(true);
+        list.numberOfViews = list.numberOfViews+1;
+        store.updateList(list);
+    }
+
+    function hasBeenLiked(id) {
+        for(let i = 0; i < list.userLikes.length; i++) {
+            if(auth.user.userName === list.userLikes[i])
+                return true;
+        }
+        return false;
+    }
+    function hasBeenDisliked(id) {
+        for(let i = 0; i < list.userDislikes.length; i++) {
+            if(auth.user.userName === list.userDislikes[i])
+                return true;
+        }
+        return false;
+    }
+
+    function handleLike() {
+        let liked = hasBeenLiked(list._id);
+        let disliked = hasBeenDisliked(list._id);
+        if(!liked && !disliked) {
+            list.userLikes.push(auth.user.userName);
+            list.numberOfLikes = list.numberOfLikes+1;
+            store.updateList(list);
+        }
+        else if(!liked && disliked) {
+            list.userLikes.push(auth.user.userName);
+            list.userDislikes = list.userDislikes.filter(item => item !== auth.user.userName);
+            list.numberOfLikes = list.numberOfLikes+1;
+            list.numberOfDislikes = list.numberOfDislikes-1;
+            store.updateList(list);
+        }
+        else if(liked && !disliked) {
+            list.userLikes = list.userLikes.filter(item => item !== auth.user.userName);
+            list.numberOfLikes = list.numberOfLikes-1;
+            store.updateList(list);
+        }
+    }
+    function handleDislike() {
+        let liked = hasBeenLiked(list._id);
+        let disliked = hasBeenDisliked(list._id);
+        if(!liked && !disliked) {
+            list.userDislikes.push(auth.user.userName);
+            list.numberOfDislikes = list.numberOfDislikes+1;
+            store.updateList(list);
+        }
+        else if(liked && !disliked) {
+            list.userDislikes.push(auth.user.userName);
+            list.userLikes = list.userLikes.filter(item => item !== auth.user.userName);
+            list.numberOfDislikes = list.numberOfDislikes+1;
+            list.numberOfLikes = list.numberOfLikes-1;
+            store.updateList(list);
+        }
+        else if(!liked && disliked) {
+            list.userDislikes = list.userDislikes.filter(item => item !== auth.user.userName);
+            list.numberOfDislikes = list.numberOfDislikes-1;
+            store.updateList(list);
+        }
     }
 
     let cardElement = ""
@@ -75,11 +137,8 @@ function ListCard(props) {
         <Card
             id={list._id}
             key={list._id}
-            sx={{ width: {
-                sx: 1.0,
-                md: 1210,
-              }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-            disabled={store.isListNameEditActive}
+            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            
             style={{
                 fontSize: '20pt',
                 borderRadius: 15,
@@ -95,13 +154,13 @@ function ListCard(props) {
                     </Box>
                 </Grid>
                 <Grid item>
-                    <Box>
-                        <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
-                            handleDeleteList(event, list._id)
-                        }} aria-label='delete'>
-                            <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
-                        </IconButton>
-                    </Box>
+                    <Box style={{ alignSelf:"flex-end" }} >
+                    <IconButton disableRipple={true} onClick={(event) => {
+                        handleDeleteList(event, list._id)
+                    }} aria-label='delete'>
+                        <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                    </IconButton>
+                </Box>
                     <Box style={{ alignSelf: "end" }}>
                         <IconButton disableRipple={true} onClick={() => setExpanded(true)}>
                             <KeyboardArrowDownIcon style={{fontSize:'30pt'}} />
@@ -115,11 +174,8 @@ function ListCard(props) {
         <Card
             id={list._id}
             key={list._id}
-            sx={{ width: {
-                xs: 1.0,
-                md: 1210,
-              }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-            disabled={store.isListNameEditActive}
+            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+           
             style={{
                 fontSize: '20pt',
                 borderRadius: 15,
@@ -133,11 +189,8 @@ function ListCard(props) {
                 <Card
                     id={list._id}
                     key={list._id}
-                    sx={{ width: {
-                        xs: 1.0,
-                        md: 1000,
-                      }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-                    disabled={store.isListNameEditActive}
+                    sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                
                     style={{
                         fontSize: '20pt',
                         borderRadius: 15,
@@ -156,8 +209,8 @@ function ListCard(props) {
                 </Card>
                 <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
             </Box>
-                <Box>
-                    <IconButton disableRipple={true} disabled={store.isListNameEditActive} onClick={(event) => {
+                <Box style={{ alignSelf:"flex-end" }} >
+                    <IconButton disableRipple={true} onClick={(event) => {
                         handleDeleteList(event, list._id)
                     }} aria-label='delete'>
                         <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
@@ -170,56 +223,185 @@ function ListCard(props) {
                 </Box>
         </Card>;
     if(list.isPublished && !isExpanded)
-        cardElement =
-            <Card
-                color={"#d8d4f4"}
-                id={list._id}
-                key={list._id}
-                sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-                disabled={store.isListNameEditActive}
-                style={{
-                    fontSize: '20pt',
-                    borderRadius: 15
-                }}
-            >
+    cardElement =
+        <Card
+            color={"#d8d4f4"}
+            id={list._id}
+            key={list._id}
+            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+           
+            style={{
+                fontSize: '20pt',
+                borderRadius: 15,
+                backgroundColor: "#d8d4f4",
+            }}
+        >
+            <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
+                <Grid item>       
                 <Box sx={{ pl: 1, flexGrow: 1 }}>
                     <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: {list.userName}</Typography>
-                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} >Published: {list.publishedDate}</Typography>
+                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography>
+                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography>
                 </Box>
-                <Box sx={{ p: 1 }}>
-                    <IconButton disabled={store.isListNameEditActive} onClick={(event) => {
-                        handleDeleteList(event, list._id)
-                    }} aria-label='delete'>
-                        <DeleteIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
-                </Box>
-                <Box sx={{ p: 1 }}>
-                    <IconButton disabled={store.isListNameEditActive} onClick={handleToggleEdit} aria-label='edit'>
-                        <EditIcon style={{fontSize:'48pt'}} />
-                    </IconButton>
-                </Box>
-            </Card>;
+                </Grid>
+                <Grid item>
+                    <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                        <IconButton disabled={auth.loggedInAsGuest} isableRipple={true} onClick={handleLike}>
+                            <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfLikes}
+                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                            <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfDislikes}
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                        Views:
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                </Grid>
+                <Grid item>
+                    { store.homeSelected ?
+                        <Box>
+                            <IconButton disableRipple={true} onClick={(event) => {
+                                handleDeleteList(event, list._id)
+                            }} aria-label='delete'>
+                                <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                        </Box> : null
+                    }
+                    <Box style={{ alignSelf: "end" }}>
+                        <IconButton disableRipple={true} onClick={handleIncrementViewCount}>
+                            <KeyboardArrowDownIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                    </Box>
+                </Grid>
+            </Grid>
+        </Card>;
 
-    if (editActive) {
-        cardElement =
-            <TextField
-                margin="normal"
-                required
-                fullWidth
-                id={"list-" + list._id}
-                label="Top 5 List Name"
-                name="name"
-                autoComplete="Top 5 List Name"
-                className='list-card'
-                onKeyPress={handleKeyPress}
-                onChange={handleUpdateText}
-                defaultValue={list.name}
-                inputProps={{style: {fontSize: 48}}}
-                InputLabelProps={{style: {fontSize: 24}}}
-                autoFocus
-            />
-    }
+        if(list.isPublished && isExpanded) {
+            cardElement =
+
+            <Card
+            color={"#d8d4f4"}
+            id={list._id}
+            key={list._id}
+            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+           
+            style={{
+                fontSize: '20pt',
+                borderRadius: 15,
+                backgroundColor: "#d8d4f4",
+            }}
+        >
+            <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
+                <Grid item>       
+                <Box sx={{ pl: 1, flexGrow: 1 }}>
+                    <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                    <Card
+                        id={list._id}
+                        key={list._id}
+                        sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                        style={{
+                            fontSize: '20pt',
+                            borderRadius: 15,
+                            backgroundColor: "#302c74",
+                            alignItems: "flex-start"
+                        }}>
+                        {
+                            <Box sx={{pl: 1, flexGrow: 1 }}>
+                                <Typography color="#d8ac34" variant="h3">{'1. ' + list.items[0]}</Typography>
+                                <Typography color="#d8ac34" variant="h3">{'2. ' + list.items[1]}</Typography>
+                                <Typography color="#d8ac34" variant="h3">{'3. ' + list.items[2]}</Typography>
+                                <Typography color="#d8ac34" variant="h3">{'4. ' + list.items[3]}</Typography>
+                                <Typography color="#d8ac34" variant="h3">{'5. ' + list.items[4]}</Typography>
+                            </Box>
+                        }
+                    </Card>
+                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography>
+                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography>
+                </Box>
+                </Grid>
+                <Grid item sx={{pl: 1, flexShrink: 1}} >
+                    <List style={{maxHeight: '100vh', overflow: 'auto'}}>
+                        {
+                            list.comments.map((item) => (
+                                <Card
+                                sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                                style={{
+                                    fontSize: '15pt',
+                                    borderRadius: 15,
+                                    backgroundColor: "#d8ac34",
+                                    color: "#302c74",
+                                    alignItems: "flex-start"
+                                }}>
+                                    <CardContent sx={{ flex: '1 0 auto' }}>
+                                        <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
+                                            <Link to='#'>{list.userName}</Link>
+                                        </Typography>
+                                        <Typography color="black" variant="h6" component="div" style={{ fontSize: '15pt'}}>
+                                            {item.value}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            ))
+                        }
+                    </List>
+                    <TextField
+                        justifyContent="flex-end"
+                        disabled={auth.loggedInAsGuest}
+                        margin="normal"
+                        size="small"
+                        value={text}
+                        placeholder="Add Comment"
+                        style={{ backgroundColor:"white" }}
+                        required
+                        fullWidth
+                        name="comment"
+                        autoComplete="Comment"
+                        onKeyPress={handleKeyPress}
+                        onChange={handleChange}
+                        autoFocus
+                    />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
+                            <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfLikes}
+                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                            <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfDislikes}
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                        Views:
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                </Grid>
+                <Grid item>
+                    { store.homeSelected ?
+                        <Box>
+                            <IconButton disableRipple={true} onClick={(event) => {
+                                handleDeleteList(event, list._id)
+                            }} aria-label='delete'>
+                                <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                        </Box> : null
+                    }
+                    <Box style={{ alignSelf: "end" }}>
+                        <IconButton disableRipple={true} onClick={() => setExpanded(false)}>
+                            <KeyboardArrowUpIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                    </Box>
+                </Grid>
+            </Grid>
+        </Card>;
+        }
+
     return (
         cardElement
     );

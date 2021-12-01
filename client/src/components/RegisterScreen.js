@@ -42,7 +42,7 @@ export default function RegisterScreen() {
             userName: formData.get('username'),
             email: formData.get('email'),
             password: formData.get('password'),
-            passwordVerify: formData.get('passwordVerify')
+            passwordVerify: formData.get('passwordVerify'),
         }, store);
     };
     let registerScreen = <Redirect to="/" />;

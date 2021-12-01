@@ -35,6 +35,13 @@ import Button from '@mui/material/Button';
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
+    const [flag, setFlag] = useState(false);
+    const [listName, setListName] = useState(store.currentList.name);
+    const [item1, setItem1] = useState(store.currentList.items[0]);
+    const [item2, setItem2] = useState(store.currentList.items[1]);
+    const [item3, setItem3] = useState(store.currentList.items[2]);
+    const [item4, setItem4] = useState(store.currentList.items[3]);
+    const [item5, setItem5] = useState(store.currentList.items[4]);
     const [buttonType, setButtonType ] = useState(null);
     store.history = useHistory();
 
@@ -51,38 +58,105 @@ function WorkspaceScreen() {
         setButtonType("Save");
     };
 
+    function handleChangeListName(event) {
+        let text = event.target.value;
+        setListName(text);
+    }
+
+    function handleChangeItem1(event) {
+        let text = event.target.value;
+        setItem1(text);
+    }
+
+    function handleChangeItem2(event) {
+        let text = event.target.value;
+        setItem2(text);
+    }
+    function handleChangeItem3(event) {
+        let text = event.target.value;
+        setItem3(text);
+    }
+    function handleChangeItem4(event) {
+        let text = event.target.value;
+        setItem4(text);
+    }
+    function handleChangeItem5(event) {
+        let text = event.target.value;
+        setItem5(text);
+    }
+
     function handlePublishList(event) {
         setButtonType("Publish");
     };
-
 
     function handleSubmit(event) {
         if(buttonType === "Save") {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            store.currentList.name = data.get("list-name");
-            store.currentList.items[0] = data.get("item-1");
-            store.currentList.items[1] = data.get("item-2");
-            store.currentList.items[2] = data.get("item-3");
-            store.currentList.items[3] = data.get("item-4");
-            store.currentList.items[4] = data.get("item-5");
+            store.currentList.name = data.get("list-name").trim();
+            store.currentList.items[0] = data.get("item-1").trim();
+            store.currentList.items[1] = data.get("item-2").trim();
+            store.currentList.items[2] = data.get("item-3").trim();
+            store.currentList.items[3] = data.get("item-4").trim();
+            store.currentList.items[4] = data.get("item-5").trim();
             store.updateCurrentList();
             store.history.push('/');
         }
         else if(buttonType === "Publish") {
-            // Validate input
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            store.currentList.name = data.get("list-name");
-            store.currentList.items[0] = data.get("item-1");
-            store.currentList.items[1] = data.get("item-2");
-            store.currentList.items[2] = data.get("item-3");
-            store.currentList.items[3] = data.get("item-4");
-            store.currentList.items[4] = data.get("item-5");
+            store.currentList.name = data.get("list-name").trim();
+            store.currentList.items[0] = data.get("item-1").trim();
+            store.currentList.items[1] = data.get("item-2").trim();
+            store.currentList.items[2] = data.get("item-3").trim();
+            store.currentList.items[3] = data.get("item-4").trim();
+            store.currentList.items[4] = data.get("item-5").trim();
             store.currentList.isPublished = true;
             store.updateCurrentList();
             store.history.push('/');
         }
+    }
+    
+    function isFormValid() {
+        return notBlank() && startsWithAlphanumeric() && !duplicateList() && !duplicateItems();
+    }
+    function duplicateList() {
+        for(let i = 0; i < store.lists.length; i++) {
+            if(store.lists[i].isPublished && store.lists[i].name === listName.trim())
+                return true;
+        }
+        return false;
+    }
+
+    function notBlank() {
+        return (listName.trim() !== ""
+        && item1.trim() !== ""
+        && item2.trim() !== ""
+        && item3.trim() !== ""
+        && item4.trim() !== ""
+        && item5.trim() !== "");
+    }
+    
+    function startsWithAlphanumeric() {
+        return (/[a-zA-Z0-9]/).test(listName.trim()[0])
+        && (/[a-zA-Z0-9]/).test(item1.trim()[0])
+        && (/[a-zA-Z0-9]/).test(item2.trim()[0])
+        && (/[a-zA-Z0-9]/).test(item3.trim()[0])
+        && (/[a-zA-Z0-9]/).test(item4.trim()[0])
+        && (/[a-zA-Z0-9]/).test(item5.trim()[0]);
+    }
+
+    function duplicateItems() {
+        return (item1.trim() === item2.trim()
+        || item1.trim() === item3.trim()
+        || item1.trim() === item4.trim()
+        || item1.trim() === item5.trim()
+        || item2.trim() === item3.trim()
+        || item2.trim() === item4.trim()
+        || item2.trim() === item5.trim()
+        || item3.trim() === item4.trim()
+        || item3.trim() === item5.trim()
+        || item4.trim() === item5.trim());
     }
 
     let editItems = "";
@@ -101,78 +175,67 @@ function WorkspaceScreen() {
             </List>;
     }
     return (
-        <div id="top5-workspace">
-            <AppBar color="transparent" style={{ boxShadow: "none"}} position="relative">
-                <Toolbar>
-                    <Grid container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-start">
-                        <Grid item >
-                            <IconButton
-                                disabled={true}
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <HomeOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                                disabled={true}
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <GroupsOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                                disabled={true}
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <PersonOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                                disabled={true}
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <FunctionsIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item >
-                            <TextField
-                                disabled={true}
-                                style={{ width: 500, backgroundColor: "white" }}
-                                defaultValue="Search" />
-                        </Grid>
-                        <Grid item >
-                            <Typography style={{ color: '#989494', fontSize: 20, fontWeight: "bold"}}>
-                                SORT BY
-                            </Typography>
-                        </Grid>
-                        <Grid item >
-                            <IconButton
-                                disabled={true}
-                                size="small"
-                                edge="end"
-                                color="inherit">
-                                <SortOutlinedIcon style={{ fontSize: 45 }}/>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+        <Box>
+            <AppBar color="transparent" style={{boxShadow: "none"}} position="relative">
+                <Toolbar >
+                    <Box sx={{pr: 2}}>
+                    <IconButton
+                        disabled={auth.loggedInAsGuest}
+                        disabled={true}
+                        size="small"
+                        edge="start"
+                        color="inherit">
+                            <HomeOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                            
+                        size="small"
+                        disabled={true}
+                        edge="start"
+                        color="inherit">
+                            <GroupsOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                            
+                        size="small"
+                        disabled={true}
+                        edge="start"
+                        color="inherit">
+                            <PersonOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                        
+                        size="small"
+                        disabled={true}
+                        edge="start"
+                        color="inherit">
+                            <FunctionsIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    </Box>
+                <TextField
+                    fullWidth
+                    disabled={true}
+                    size="small"
+                    style={{ maxWidth: "50%", backgroundColor: "white" }}
+                    placeholder="Search" />
+                <Box sx={{ flexGrow: 1 }}>{}</Box>
+                <Box style={{ alignItems:'center' }} sx={{ display: { xs: 'none', md: 'flex'} }}>
+                    <Typography style={{ color: '#989494', fontSize: 20, fontWeight: "bold"}}>
+                        SORT BY
+                    </Typography>
+                    <Box sx={{ pr: 1 }}>{}</Box>
+                    <IconButton
+                        disabled={true}
+                        size="small"
+                        edge="end"
+                        color="inherit">
+                        <SortOutlinedIcon style={{ fontSize: 45 }}/>
+                    </IconButton>
+                </Box>
                 </Toolbar>
             </AppBar>
-            <Grid container>
-                <Grid item>
-                    <Card
-                    id={store.currentList._id}
-                    key={store.currentList._id}
-                    sx={{ height: {sx: 1.0, md: 400}, width: {
-                        sx: 1.0,
-                        md: 1210,
-                      }, marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            <Card
+                    sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                     disabled={store.isListNameEditActive}
                     style={{
                         fontSize: '20pt',
@@ -181,95 +244,91 @@ function WorkspaceScreen() {
                         alignItems: "flex-start",
                         position: "relative"
                     }}>
-                        <Card
-                            id={store.currentList._id}
-                            key={store.currentList._id}
-                            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-                            disabled={store.isListNameEditActive}
-                            style={{
-                                fontSize: '20pt',
-                                borderRadius: 15,
-                                backgroundColor: "#302c74",
-                                alignItems: "center"
-                            }}>
-                            {
-                                <Box component="form" onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
-                                    <TextField id="list-name"
-                                    
-                                    name="list-name"
-                                    autoComplete="list-name"
-                                    size="small" style={{ width: 600, backgroundColor: "white" }} defaultValue={store.currentList.name}/>
-                                    <Box style={{paddingTop: "2%"}} ></Box>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    id="item-1"
-                                    
-                                    name="item-1"
-                                    autoComplete="item-1"
-                                    autoFocus
-                                    style={{ width: 950, backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[0]}/>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    id="item-2"
-                                   
-                                    name="item-2"
-                                    autoComplete="item-2"
-                                    autoFocus
-                                    style={{ width: 950, backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[1]}/>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    id="item-3"
-                                    
-                                    name="item-3"
-                                    autoComplete="item-3"
-                                    autoFocus
-                                    style={{ width: 950, backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[2]}/>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    id="item-4"
-                                    
-                                    name="item-4"
-                                    autoComplete="item-4"
-                                    autoFocus
-                                    style={{ width: 950, backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[3]}/>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    id="item-5"
-                                    
-                                    name="item-5"
-                                    autoComplete="item-5"
-                                    autoFocus
-                                    style={{ width: 950, backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[4]}/>
-                                    <Button
-                                        onClick={handleSaveList}
-                                        type="submit"
-                                        variant="contained"
-                                        sx={{ mt: 3, mb: 5, ml: 2 }}
-                                        >
-                                        Save
-                                    </Button>
-                                    <Button
-                                       onClick={handlePublishList}
-                                       type="submit"
-                                        variant="contained"
-                                        sx={{ mt: 3, mb: 5, ml: 1}}
-                                        >
-                                        Publish
-                                    </Button>
-                                </Box>
-                            }
-                        </Card>
-                        
+                    <Card
+                        sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                        disabled={store.isListNameEditActive}
+                        style={{
+                            fontSize: '20pt',
+                            borderRadius: 15,
+                            backgroundColor: "#302c74",
+                            alignItems: "center"
+                        }}>
+                        {
+                            <Box component="form" onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
+                                <TextField id="list-name"
+                                onChange={handleChangeListName}
+                                name="list-name"
+                                autoComplete="list-name"
+                                size="small" style={{ backgroundColor: "white" }} defaultValue={store.currentList.name}/>
+                                <Box style={{paddingTop: "2%"}} ></Box>
+                                <TextField
+                                required
+                                fullWidth
+                                id="item-1"
+                                onChange={handleChangeItem1}
+                                name="item-1"
+                                autoComplete="item-1"
+                         
+                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[0]}/>
+                                <TextField
+                                required
+                                fullWidth
+                                id="item-2"
+                                onChange={handleChangeItem2}
+                                name="item-2"
+                                autoComplete="item-2"
+                              
+                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[1]}/>
+                                <TextField
+                                required
+                                fullWidth
+                                id="item-3"
+                                onChange={handleChangeItem3}
+                                name="item-3"
+                                autoComplete="item-3"
+                            
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[2]}/>
+                                <TextField
+                                required
+                                fullWidth
+                                id="item-4"
+                                onChange={handleChangeItem4}
+                                name="item-4"
+                                autoComplete="item-4"
+                       
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[3]}/>
+                                <TextField
+                                required
+                                fullWidth
+                                id="item-5"
+                                onChange={handleChangeItem5}
+                                name="item-5"
+                                autoComplete="item-5"
+                           
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[4]}/>
+                                <Button
+                                    onClick={handleSaveList}
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 5, ml: 2 }}
+                                    >
+                                    Save
+                                </Button>
+                                <Button
+                                    onClick={handlePublishList}
+                                    disabled={!isFormValid()}
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 5, ml: 1}}
+                                    >
+                                    Publish
+                                </Button>
+                            </Box>
+                        }
                     </Card>
-                </Grid>
-            </Grid>
+                </Card>
             <Statusbar/>
-        </div>)
+        </Box>)
 }
 
 export default WorkspaceScreen;

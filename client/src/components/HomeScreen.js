@@ -19,6 +19,7 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
+import { Link } from 'react-router-dom';
 import Statusbar from './Statusbar.js';
 /*
     This React component lists all the top5 lists in the UI.
@@ -32,7 +33,10 @@ const HomeScreen = () => {
     const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
-        store.loadLists();
+        if(auth.loggedIn)
+            store.loadLists();
+        else if(auth.loggedInAsGuest)
+            store.loadAllLists();
     }, []);
 
     function handleCreateNewList() {
@@ -49,11 +53,20 @@ const HomeScreen = () => {
 
     const handleClick = () => {
     }
+    
+    function handleKeyPress(event) {
+        if (event.code === "Enter") {
+            let searchText = event.target.value.trim();
+            if (searchText !== "") {
+                store.homeSearchBar(searchText);
+            }
+        }
+    }
 
     let listCard = "";
     if (store) {
         listCard = 
-            <List style={{ minWidth: '100%', minHeight: '100%', position: 'relative'}} >
+            <List style={{maxHeight: '100vh', overflow: 'auto'}}>
             {
                 store.lists.map((list) => (
                     <ListCard
@@ -92,81 +105,68 @@ const HomeScreen = () => {
         </Menu>
     );
     return (
-        <div id="home-screen">
-            <AppBar color="transparent" style={{ boxShadow: "none"}} position="relative">
-                <Toolbar>
-                    <Grid container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-start">
-                        <Grid item >
-                            <IconButton
-                                disabled={auth.loggedInAsGuest}
-                        
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <HomeOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                            
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <GroupsOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                            
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <PersonOutlinedIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <IconButton
-                        
-                                size="small"
-                                edge="start"
-                                color="inherit">
-                                    <FunctionsIcon style={{ fontSize: 45}}/>
-                            </IconButton>
-                        </Grid>
-                        <Grid item >
-                            <TextField
-                                style={{ width: 500, backgroundColor: "white" }}
-                                placeholder="Search" />
-                        </Grid>
-                        <Grid item >
-                            <Typography style={{ fontSize: 20, fontWeight: "bold"}}>
-                                SORT BY
-                            </Typography>
-                        </Grid>
-                        <Grid item >
-                            <IconButton
-                                onClick={handleMenuOpen}
-                                size="small"
-                                edge="end"
-                                color="inherit">
-                                <SortOutlinedIcon style={{ fontSize: 45 }}/>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+        <Box>
+            <AppBar color="transparent" style={{boxShadow: "none"}} position="relative">
+                <Toolbar >
+                    <Box sx={{pr: 2}}>
+                    <IconButton
+                        disabled={auth.loggedInAsGuest}
+                        onClick={() => store.loadLists()}
+                        size="small"
+                        edge="start"
+                        color="inherit">
+                            <HomeOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                        onClick={() => store.loadAllLists()}    
+                        size="small"
+                        edge="start"
+                        color="inherit">
+                            <GroupsOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                        onClick={() => store.loadUserLists()}    
+                        size="small"
+                        edge="start"
+                        color="inherit">
+                            <PersonOutlinedIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    <IconButton
+                        onClick={() => store.loadCommunityLists()}  
+                        size="small"
+                        edge="start"
+                        color="inherit">
+                            <FunctionsIcon style={{ fontSize: 45}}/>
+                    </IconButton>
+                    </Box>
+                <TextField
+                    onKeyPress={handleKeyPress}
+                    fullWidth
+                    size="small"
+                    style={{ maxWidth: "50%", backgroundColor: "white" }}
+                    placeholder="Search" />
+                <Box sx={{ flexGrow: 1 }}>{}</Box>
+                <Box style={{ alignItems:'center' }} sx={{ display: { xs: 'none', md: 'flex'} }}>
+                    <Typography style={{ fontSize: 20, fontWeight: "bold"}}>
+                        SORT BY
+                    </Typography>
+                    <Box sx={{ pr: 1 }}>{}</Box>
+                    <IconButton
+                        onClick={handleMenuOpen}
+                        size="small"
+                        edge="end"
+                        color="inherit">
+                        <SortOutlinedIcon style={{ fontSize: 45 }}/>
+                    </IconButton>
+                </Box>
                 </Toolbar>
             </AppBar>
             { menu }
-            <Grid container>
-                <Grid item>
-                    <div id="list-selector-list">
-                        {
-                            listCard
-                        }
-                    </div>
-                </Grid>
-            </Grid>
+            <div id="list-selector-list">
+                {listCard}
+            </div>
             <Statusbar/>
-        </div>)
+        </Box>)
 }
 
 export default HomeScreen;
