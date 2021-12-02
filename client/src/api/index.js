@@ -29,6 +29,12 @@ export const updateTop5ListById = (id, payload) => api.put(`/top5list/${id}`, pa
 export const deleteTop5ListById = (id) => api.delete(`/top5list/${id}`)
 export const getTop5ListById = (id) => api.get(`/top5list/${id}`)
 
+export const createCommunityList = (payload) => api.post(`/communitylist/`, payload)
+export const getAllCommunityLists = () => api.get(`/communitylists/`)
+export const updateCommunityListById = (id, payload) => api.put(`/communitylist/${id}`, payload)
+export const deleteCommunityListById = (id) => api.delete(`/communitylist/${id}`)
+export const getCommunityListById = (id) => api.get(`/communitylist/${id}`)
+
 export const getLoggedIn = () => api.get(`/loggedIn/`);
 export const registerUser = (payload) => api.post(`/register/`, payload)
 export const loginUser = (payload) => api.post(`/login/`, payload)
@@ -44,7 +50,12 @@ const apis = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    createCommunityList,
+    getAllCommunityLists,
+    updateCommunityListById,
+    deleteCommunityListById,
+    getCommunityListById
 }
 
 export default apis

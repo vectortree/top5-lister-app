@@ -114,6 +114,7 @@ function WorkspaceScreen() {
             store.currentList.isPublished = true;
             store.updateCurrentList();
             store.history.push('/');
+            store.updateCommunityList(store.currentList);
         }
     }
     
@@ -122,7 +123,7 @@ function WorkspaceScreen() {
     }
     function duplicateList() {
         for(let i = 0; i < store.lists.length; i++) {
-            if(store.lists[i].isPublished && store.lists[i].name === listName.trim())
+            if(store.lists[i].isPublished && store.lists[i].name.localeCompare(listName.trim(), undefined, {sensitivity: 'accent'})===0)
                 return true;
         }
         return false;
@@ -147,16 +148,16 @@ function WorkspaceScreen() {
     }
 
     function duplicateItems() {
-        return (item1.trim() === item2.trim()
-        || item1.trim() === item3.trim()
-        || item1.trim() === item4.trim()
-        || item1.trim() === item5.trim()
-        || item2.trim() === item3.trim()
-        || item2.trim() === item4.trim()
-        || item2.trim() === item5.trim()
-        || item3.trim() === item4.trim()
-        || item3.trim() === item5.trim()
-        || item4.trim() === item5.trim());
+        return (item1.trim().localeCompare(item2.trim(), undefined, {sensitivity: 'accent'})===0
+        || item1.trim().localeCompare(item3.trim(), undefined, {sensitivity: 'accent'})===0
+        || item1.trim().localeCompare(item4.trim(), undefined, {sensitivity: 'accent'})===0
+        || item1.trim().localeCompare(item5.trim(), undefined, {sensitivity: 'accent'})===0
+        || item2.trim().localeCompare(item3.trim(), undefined, {sensitivity: 'accent'})===0
+        || item2.trim().localeCompare(item4.trim(), undefined, {sensitivity: 'accent'})===0
+        || item2.trim().localeCompare(item5.trim(), undefined, {sensitivity: 'accent'})===0
+        || item3.trim().localeCompare(item4.trim(), undefined, {sensitivity: 'accent'})===0
+        || item3.trim().localeCompare(item5.trim(), undefined, {sensitivity: 'accent'})===0
+        || item4.trim().localeCompare(item5.trim(), undefined, {sensitivity: 'accent'})===0);
     }
 
     let editItems = "";

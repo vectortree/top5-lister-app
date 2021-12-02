@@ -21,20 +21,39 @@ function Statusbar() {
         let text ="";
         if (store.currentList)
             text = store.currentList.name;
+        let statusbar = "";
+        if(store.homeSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <IconButton 
+                        sx={{ m: 1 , mb: 2 }}
+                        size="small"
+                        edge="end"
+                        color="inherit"
+                        disabled={store.currentList != null}
+                        onClick={handleCreateNewList}>
+                        <AddOutlinedIcon style={{ fontSize: 60 }} />
+                    </IconButton>
+                    <Typography color={store.currentList != null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
+                    <Typography variant="h4">{text}</Typography>
+                </div>;
+        else if(store.allListsSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">{store.searchBarText !== "" ? store.searchBarText+" Lists" : "All Lists"}</Typography>
+                </div>;
+        else if(store.usersSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">{store.searchBarText !== "" ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
+                </div>;
+        else if(store.communityListsSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">Community Lists</Typography>
+                </div>;
         return (
-            <div id="top5-statusbar">
-                <IconButton 
-                    sx={{ m: 1 , mb: 2 }}
-                    size="small"
-                    edge="end"
-                    color="inherit"
-                    disabled={store.currentList != null}
-                    onClick={handleCreateNewList}>
-                    <AddOutlinedIcon style={{ fontSize: 60 }} />
-                </IconButton>
-                <Typography color={store.currentList != null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
-                <Typography variant="h4">{text}</Typography>
-            </div>
+            statusbar
         );
     }
     else if(auth.loggedInAsGuest) {

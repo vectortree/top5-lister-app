@@ -36,7 +36,7 @@ const HomeScreen = () => {
         if(auth.loggedIn)
             store.loadLists();
         else if(auth.loggedInAsGuest)
-            store.loadAllLists();
+            store.loadCommunityLists();
     }, []);
 
     function handleCreateNewList() {
@@ -59,10 +59,13 @@ const HomeScreen = () => {
             let searchText = event.target.value.trim();
             if(store.homeSelected)
                 store.homeSearchBar(searchText);
+
             else if(store.allListsSelected)
                 store.allListsSearchBar(searchText);
+
             else if(store.usersSelected)
                 store.usersSearchBar(searchText);
+
             else if(store.communityListsSelected)
                 store.communityListsSearchBar(searchText);
         }
@@ -130,7 +133,7 @@ const HomeScreen = () => {
                             <GroupsOutlinedIcon style={{ fontSize: 45}}/>
                     </IconButton>
                     <IconButton
-                        onClick={() => store.loadUserLists()}    
+                        onClick={() => store.loadUserLists()}
                         size="small"
                         edge="start"
                         color="inherit">

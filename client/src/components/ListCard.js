@@ -57,7 +57,10 @@ function ListCard(props) {
                 };
                 setText("");
                 list.comments.push(pair);
-                store.updateList(list);
+                if(store.communityListsSelected) {
+                    store.updateCommunityListInfo(list);
+                }
+                else store.updateList(list);
             }
         }
     }
@@ -70,7 +73,10 @@ function ListCard(props) {
     function handleIncrementViewCount() {
         setExpanded(true);
         list.numberOfViews = list.numberOfViews+1;
-        store.updateList(list);
+        if(store.communityListsSelected) {
+            store.updateCommunityListInfo(list);
+        }
+        else store.updateList(list);
     }
 
     function hasBeenLiked(id) {
@@ -94,19 +100,28 @@ function ListCard(props) {
         if(!liked && !disliked) {
             list.userLikes.push(auth.user.userName);
             list.numberOfLikes = list.numberOfLikes+1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
         else if(!liked && disliked) {
             list.userLikes.push(auth.user.userName);
             list.userDislikes = list.userDislikes.filter(item => item !== auth.user.userName);
             list.numberOfLikes = list.numberOfLikes+1;
             list.numberOfDislikes = list.numberOfDislikes-1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
         else if(liked && !disliked) {
             list.userLikes = list.userLikes.filter(item => item !== auth.user.userName);
             list.numberOfLikes = list.numberOfLikes-1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
     }
     function handleDislike() {
@@ -115,23 +130,217 @@ function ListCard(props) {
         if(!liked && !disliked) {
             list.userDislikes.push(auth.user.userName);
             list.numberOfDislikes = list.numberOfDislikes+1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
         else if(liked && !disliked) {
             list.userDislikes.push(auth.user.userName);
             list.userLikes = list.userLikes.filter(item => item !== auth.user.userName);
             list.numberOfDislikes = list.numberOfDislikes+1;
             list.numberOfLikes = list.numberOfLikes-1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
         else if(!liked && disliked) {
             list.userDislikes = list.userDislikes.filter(item => item !== auth.user.userName);
             list.numberOfDislikes = list.numberOfDislikes-1;
-            store.updateList(list);
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
     }
 
     let cardElement = ""
+    if(store.communityListsSelected) {
+        if(!isExpanded) {
+        cardElement =
+            <Card
+                color={"#d8d4f4"}
+                id={list._id}
+                key={list._id}
+                sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            
+                style={{
+                    fontSize: '20pt',
+                    borderRadius: 15,
+                    backgroundColor: "#d8d4f4",
+                }}
+            >
+                <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
+                    <Grid item>       
+                    <Box sx={{ pl: 1, flexGrow: 1 }}>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} display="inline">Updated:</Typography>
+                        <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
+                    </Box>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                            <IconButton disabled={auth.loggedInAsGuest} isableRipple={true} onClick={handleLike}>
+                                <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfLikes}
+                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                                <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfDislikes}
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                            Views:
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                    </Grid>
+                    <Grid item>
+                        { store.homeSelected ?
+                            <Box>
+                                <IconButton disableRipple={true} onClick={(event) => {
+                                    handleDeleteList(event, list._id)
+                                }} aria-label='delete'>
+                                    <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                                </IconButton>
+                            </Box> : null
+                        }
+                        <Box style={{ alignSelf: "end" }}>
+                            <IconButton disableRipple={true} onClick={handleIncrementViewCount}>
+                                <KeyboardArrowDownIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Card>;
+        }
+        if(isExpanded) {
+                cardElement =
+
+                <Card
+                color={"#d8d4f4"}
+                id={list._id}
+                key={list._id}
+                sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+            
+                style={{
+                    fontSize: '20pt',
+                    borderRadius: 15,
+                    backgroundColor: "#d8d4f4",
+                }}
+            >
+                <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
+                    <Grid item>       
+                    <Box sx={{ pl: 1, flexGrow: 1 }}>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Card
+                            id={list._id}
+                            key={list._id}
+                            sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                            style={{
+                                fontSize: '20pt',
+                                borderRadius: 15,
+                                backgroundColor: "#302c74",
+                                alignItems: "flex-start"
+                            }}>
+                            {
+                                <Box sx={{pl: 1, flexGrow: 1 }}>
+                                    <Typography color="#d8ac34" variant="h3">{'1. ' + list.items[0]}</Typography>
+                                    <Typography color="#d8ac34" variant="h6">{'(' + list.itemPointPairs[0].value + ' Votes)'}</Typography>
+                                    <Typography color="#d8ac34" variant="h3">{'2. ' + list.items[1]}</Typography>
+                                    <Typography color="#d8ac34" variant="h6">{'(' + list.itemPointPairs[1].value + ' Votes)'}</Typography>
+                                    <Typography color="#d8ac34" variant="h3">{'3. ' + list.items[2]}</Typography>
+                                    <Typography color="#d8ac34" variant="h6">{'(' + list.itemPointPairs[2].value + ' Votes)'}</Typography>
+                                    <Typography color="#d8ac34" variant="h3">{'4. ' + list.items[3]}</Typography>
+                                    <Typography color="#d8ac34" variant="h6">{'(' + list.itemPointPairs[3].value + ' Votes)'}</Typography>
+                                    <Typography color="#d8ac34" variant="h3">{'5. ' + list.items[4]}</Typography>
+                                    <Typography color="#d8ac34" variant="h6">{'(' + list.itemPointPairs[4].value + ' Votes)'}</Typography>
+                                </Box>
+                            }
+                        </Card>
+                        <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography>
+                        <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
+                    </Box>
+                    </Grid>
+                    <Grid item sx={{pl: 1, flexShrink: 1}} >
+                        <List style={{maxHeight: '100vh', overflow: 'auto'}}>
+                            {
+                                list.comments.map((item) => (
+                                    <Card
+                                    sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                                    style={{
+                                        fontSize: '15pt',
+                                        borderRadius: 15,
+                                        backgroundColor: "#d8ac34",
+                                        color: "#302c74",
+                                        alignItems: "flex-start"
+                                    }}>
+                                        <CardContent sx={{ flex: '1 0 auto' }}>
+                                            <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
+                                                <Link to='#'>{list.userName}</Link>
+                                            </Typography>
+                                            <Typography color="black" variant="h6" component="div" style={{ fontSize: '15pt'}}>
+                                                {item.value}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            }
+                        </List>
+                        <TextField
+                            justifyContent="flex-end"
+                            disabled={auth.loggedInAsGuest}
+                            margin="normal"
+                            size="small"
+                            value={text}
+                            placeholder="Add Comment"
+                            style={{ backgroundColor:"white" }}
+                            required
+                            fullWidth
+                            name="comment"
+                            autoComplete="Comment"
+                            onKeyPress={handleKeyPress}
+                            onChange={handleChange}
+                            autoFocus
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
+                                <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfLikes}
+                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                                <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfDislikes}
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                            Views:
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                    </Grid>
+                    <Grid item>
+                        { store.homeSelected ?
+                            <Box>
+                                <IconButton disableRipple={true} onClick={(event) => {
+                                    handleDeleteList(event, list._id)
+                                }} aria-label='delete'>
+                                    <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                                </IconButton>
+                            </Box> : null
+                        }
+                        <Box style={{ alignSelf: "end" }}>
+                            <IconButton disableRipple={true} onClick={() => setExpanded(false)}>
+                                <KeyboardArrowUpIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                        </Box>
+                    </Grid>
+                </Grid>
+            </Card>;
+        }
+    }
+    else {
     if(!list.isPublished && !isExpanded)
         cardElement =
         <Card
@@ -241,8 +450,11 @@ function ListCard(props) {
                 <Box sx={{ pl: 1, flexGrow: 1 }}>
                     <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                     <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
-                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography>
-                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography>
+                    { !store.communityListsSelected ? <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography> :
+                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography> }
+                    { !store.communityListsSelected ? <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography> :
+                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
+                    }
                 </Box>
                 </Grid>
                 <Grid item>
@@ -320,8 +532,11 @@ function ListCard(props) {
                             </Box>
                         }
                     </Card>
-                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography>
-                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography>
+                    { !store.communityListsSelected ? <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography> :
+                    <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography> }
+                    { !store.communityListsSelected ? <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography> :
+                    <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
+                    }
                 </Box>
                 </Grid>
                 <Grid item sx={{pl: 1, flexShrink: 1}} >
@@ -401,6 +616,7 @@ function ListCard(props) {
             </Grid>
         </Card>;
         }
+    }
 
     return (
         cardElement

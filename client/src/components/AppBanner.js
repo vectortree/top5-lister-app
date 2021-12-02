@@ -109,7 +109,7 @@ export default function AppBanner() {
     if(auth.loggedIn) {
         let initials = auth.user.firstName.charAt(0).concat(auth.user.lastName.charAt(0));
         accountMenu =
-            <Fab onClick={handleProfileMenuOpen} size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d834dc', color: 'black', fontSize: 20}}>{initials}</Fab>;
+            <Fab onClick={handleProfileMenuOpen} size="small" sx={{ pt:0.5 }} style={{ border: '1px solid black', textDecoration: 'none', backgroundColor:'#d434dc', color: 'black', fontSize: 20}}>{initials}</Fab>;
     }
 
     return (

@@ -1,6 +1,7 @@
 const auth = require('../auth')
 const express = require('express')
 const Top5ListController = require('../controllers/top5list-controller')
+const CommunityListController = require('../controllers/communitylist-controller')
 const UserController = require('../controllers/user-controller')
 const router = express.Router()
 
@@ -10,6 +11,12 @@ router.delete('/top5list/:id', auth.verify, Top5ListController.deleteTop5List)
 router.get('/top5list/:id', auth.verify, Top5ListController.getTop5ListById)
 router.get('/top5lists', auth.verify, Top5ListController.getTop5Lists)
 router.get('/top5listpairs', auth.verify, Top5ListController.getTop5ListPairs)
+
+router.post('/communitylist', auth.verify, CommunityListController.createCommunityList)
+router.put('/communitylist/:id', auth.verify, CommunityListController.updateCommunityList)
+router.delete('/communitylist/:id', auth.verify, CommunityListController.deleteCommunityList)
+router.get('/communitylist/:id', auth.verify, CommunityListController.getCommunityListById)
+router.get('/communitylists', auth.verify, CommunityListController.getCommunityLists)
 
 router.post('/login', UserController.loginUser)
 router.post('/register', UserController.registerUser)
