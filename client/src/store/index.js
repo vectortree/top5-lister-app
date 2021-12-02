@@ -187,17 +187,22 @@ function GlobalStoreContextProvider(props) {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    addListButtonEnabled: true
                 });
             }
             
             case GlobalStoreActionType.SEARCH_BAR: {
                 return setStore({
-                    lists: payload,
+                    lists: payload.lists,
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    addListButtonEnabled: true
+                    addListButtonEnabled: true,
+                    searchBarText: payload.searchBarText,
+                    homeSelected: payload.homeSelected,
+                    allListsSelected: payload.allListsSelected,
+                    usersSelected: payload.userSelected,
+                    communityListsSelected: payload.communityListsSelected,
+                    addListButtonEnabled: payload.addListButtonEnabled
                 });
             }
             default:
@@ -350,7 +355,7 @@ function GlobalStoreContextProvider(props) {
             let lists = [];
             for (let key in top5Lists) {
                 let list = top5Lists[key];
-                if(list.isPublished) {
+                if(list.isPublished && list.name === store.searchBarText) {
                     let info = {
                         _id: list._id,
                         name: list.name,
@@ -386,23 +391,25 @@ function GlobalStoreContextProvider(props) {
             let lists = [];
             for (let key in top5Lists) {
                 let list = top5Lists[key];
-                let info = {
-                    _id: list._id,
-                    name: list.name,
-                    items: list.items,
-                    ownerEmail: list.ownerEmail,
-                    userName: list.userName,
-                    numberOfLikes: list.numberOfLikes,
-                    numberOfDislikes: list.numberOfDislikes,
-                    publishedDate: list.publishedDate,
-                    comments: list.comments,
-                    isPublished: list.isPublished,
-                    numberOfViews: list.numberOfViews,
-                    userLikes: list.userLikes,
-                    userDislikes: list.userDislikes
-                    
-                };
-                lists.push(info);
+                if(list.isPublished) {
+                    let info = {
+                        _id: list._id,
+                        name: list.name,
+                        items: list.items,
+                        ownerEmail: list.ownerEmail,
+                        userName: list.userName,
+                        numberOfLikes: list.numberOfLikes,
+                        numberOfDislikes: list.numberOfDislikes,
+                        publishedDate: list.publishedDate,
+                        comments: list.comments,
+                        isPublished: list.isPublished,
+                        numberOfViews: list.numberOfViews,
+                        userLikes: list.userLikes,
+                        userDislikes: list.userDislikes
+                        
+                    };
+                    lists.push(info);
+                }
             }
             storeReducer({
                 type: GlobalStoreActionType.LOAD_LISTS,
@@ -493,13 +500,61 @@ function GlobalStoreContextProvider(props) {
         }
     }
 
-    store.homeSearchBar = function (searchText) {
-        store.loadLists();
-        let lists = store.lists.filter(x => x.name.startsWith(searchText));
+    store.homeSearchBar = async function (searchText) {
+        const response = await api.getAllTop5Lists();
+        if (response.data.success) {
+            let top5Lists = response.data.top5Lists;
+            let lists = [];
+            for (let key in top5Lists) {
+                let list = top5Lists[key];
+                if(auth.user.email === list.ownerEmail) {
+                    let info = {
+                        _id: list._id,
+                        name: list.name,
+                        items: list.items,
+                        ownerEmail: list.ownerEmail,
+                        userName: list.userName,
+                        numberOfLikes: list.numberOfLikes,
+                        numberOfDislikes: list.numberOfDislikes,
+                        publishedDate: list.publishedDate,
+                        comments: list.comments,
+                        isPublished: list.isPublished,
+                        numberOfViews: list.numberOfViews,
+                        userLikes: list.userLikes,
+                        userDislikes: list.userDislikes
+                        
+                    };
+                    lists.push(info);
+                }
+            }
+            let lsts = lists.filter(x => x.name.startsWith(searchText));
+            storeReducer({
+                type: GlobalStoreActionType.SEARCH_BAR,
+                payload: {
+                    lists: lsts,
+                    searchBarText: searchText,
+                    homeSelected: true,
+                    usersSelected: false,
+                    allListsSelected: false,
+                    communityListSelected: false
+                }
+            });
+        }
+    }
+
+    store.allListsSearchBar = async function (searchText) {
         storeReducer({
             type: GlobalStoreActionType.SEARCH_BAR,
-            payload: lists
+            payload: {
+                lists: null,
+                searchBarText: searchText,
+                homeSelected: false,
+                usersSelected: false,
+                allListsSelected: true,
+                communityListSelected: false
+            }
         });
+        store.loadAllLists();
     }
 
     return (

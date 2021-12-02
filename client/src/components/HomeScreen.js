@@ -57,9 +57,14 @@ const HomeScreen = () => {
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let searchText = event.target.value.trim();
-            if (searchText !== "") {
+            if(store.homeSelected)
                 store.homeSearchBar(searchText);
-            }
+            else if(store.allListsSelected)
+                store.allListsSearchBar(searchText);
+            else if(store.usersSelected)
+                store.usersSearchBar(searchText);
+            else if(store.communityListsSelected)
+                store.communityListsSearchBar(searchText);
         }
     }
 
@@ -142,6 +147,7 @@ const HomeScreen = () => {
                 <TextField
                     onKeyPress={handleKeyPress}
                     fullWidth
+                    defaultValue=""
                     size="small"
                     style={{ maxWidth: "50%", backgroundColor: "white" }}
                     placeholder="Search" />
