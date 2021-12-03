@@ -93,28 +93,42 @@ function WorkspaceScreen() {
         if(buttonType === "Save") {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            store.currentList.name = data.get("list-name").trim();
-            store.currentList.items[0] = data.get("item-1").trim();
-            store.currentList.items[1] = data.get("item-2").trim();
-            store.currentList.items[2] = data.get("item-3").trim();
-            store.currentList.items[3] = data.get("item-4").trim();
-            store.currentList.items[4] = data.get("item-5").trim();
-            store.updateCurrentList();
+            let list = store.currentList;
+            list.name = data.get("list-name").trim();
+            list.items[0] = data.get("item-1").trim();
+            list.items[1] = data.get("item-2").trim();
+            list.items[2] = data.get("item-3").trim();
+            list.items[3] = data.get("item-4").trim();
+            list.items[4] = data.get("item-5").trim();
+            if(store.newListCreatedFlag) {
+                store.createNewList(list);
+            }
+            else {
+                store.updateList(list);
+            }
+            store.loadLists();
             store.history.push('/');
+            
         }
         else if(buttonType === "Publish") {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            store.currentList.name = data.get("list-name").trim();
-            store.currentList.items[0] = data.get("item-1").trim();
-            store.currentList.items[1] = data.get("item-2").trim();
-            store.currentList.items[2] = data.get("item-3").trim();
-            store.currentList.items[3] = data.get("item-4").trim();
-            store.currentList.items[4] = data.get("item-5").trim();
-            store.currentList.isPublished = true;
-            store.updateCurrentList();
-            store.history.push('/');
+            let list = store.currentList;
+            list.name = data.get("list-name").trim();
+            list.items[0] = data.get("item-1").trim();
+            list.items[1] = data.get("item-2").trim();
+            list.items[2] = data.get("item-3").trim();
+            list.items[3] = data.get("item-4").trim();
+            list.items[4] = data.get("item-5").trim();
+            if(store.newListCreatedFlag) {
+                store.createNewList(list);
+            }
+            else {
+                store.updateList(list);
+            }
             store.updateCommunityList(store.currentList);
+            store.loadLists();
+            store.history.push('/');
         }
     }
     
@@ -255,11 +269,11 @@ function WorkspaceScreen() {
                             alignItems: "center"
                         }}>
                         {
-                            <Box component="form" onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
+                            <Box component="form" onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }} onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
                                 <TextField id="list-name"
                                 onChange={handleChangeListName}
                                 name="list-name"
-                                autoComplete="list-name"
+                                autoComplete="off"
                                 size="small" style={{ backgroundColor: "white" }} defaultValue={store.currentList.name}/>
                                 <Box style={{paddingTop: "2%"}} ></Box>
                                 <TextField
@@ -268,7 +282,7 @@ function WorkspaceScreen() {
                                 id="item-1"
                                 onChange={handleChangeItem1}
                                 name="item-1"
-                                autoComplete="item-1"
+                                autoComplete="off"
                          
                                 style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[0]}/>
                                 <TextField
@@ -277,7 +291,7 @@ function WorkspaceScreen() {
                                 id="item-2"
                                 onChange={handleChangeItem2}
                                 name="item-2"
-                                autoComplete="item-2"
+                                autoComplete="off"
                               
                                 style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[1]}/>
                                 <TextField
@@ -286,7 +300,7 @@ function WorkspaceScreen() {
                                 id="item-3"
                                 onChange={handleChangeItem3}
                                 name="item-3"
-                                autoComplete="item-3"
+                                autoComplete="off"
                             
                                 style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[2]}/>
                                 <TextField
@@ -295,7 +309,7 @@ function WorkspaceScreen() {
                                 id="item-4"
                                 onChange={handleChangeItem4}
                                 name="item-4"
-                                autoComplete="item-4"
+                                autoComplete="off"
                        
                                 style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[3]}/>
                                 <TextField
@@ -304,7 +318,7 @@ function WorkspaceScreen() {
                                 id="item-5"
                                 onChange={handleChangeItem5}
                                 name="item-5"
-                                autoComplete="item-5"
+                                autoComplete="off"
                            
                                 style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[4]}/>
                                 <Button

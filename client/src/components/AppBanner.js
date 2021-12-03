@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import AuthContext from '../auth';
 import { GlobalStoreContext } from '../store'
@@ -19,6 +20,7 @@ export default function AppBanner() {
     const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
     const isMenuOpen = Boolean(anchorEl);
+    store.history = useHistory();
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -122,7 +124,7 @@ export default function AppBanner() {
                         component="div"
                         sx={{ display: { xs: 'none', sm: 'block' } }}                        
                     >
-                        <Link style={{ textDecoration: 'none', color: '#d8ac34', fontSize: 40, fontWeight: '500'}} to='/' onClick={() => auth.loggedInAsGuest ? auth.logoutAsGuest() : null}>T<sup>5</sup>L</Link>
+                        <Link style={{ textDecoration: 'none', color: '#d8ac34', fontSize: 40, fontWeight: '500'}} to='/' onClick={() => auth.loggedInAsGuest ? auth.logoutAsGuest() : store.history.push('/')}>T<sup>5</sup>L</Link>
                     </Typography>
                     <Box sx={{ flexGrow: 1 }}>{}</Box>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

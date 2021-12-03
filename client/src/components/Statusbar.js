@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AuthContext from '../auth';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import IconButton from '@mui/material/IconButton';
+import { useHistory } from 'react-router-dom'
 
 /*
     Our Status bar React component goes at the bottom of our UI.
@@ -14,14 +15,17 @@ import IconButton from '@mui/material/IconButton';
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
+    store.history = useHistory();
+
     function handleCreateNewList() {
-        store.createNewList();
+        store.makeNewList();
     }
+    let statusbar = "";
+    let text ="";
+    if (store.currentList)
+        text = store.currentList.name;
+    
     if(auth.loggedIn) {
-        let text ="";
-        if (store.currentList)
-            text = store.currentList.name;
-        let statusbar = "";
         if(store.homeSelected)
             statusbar =
                 <div id="top5-statusbar">
@@ -30,43 +34,48 @@ function Statusbar() {
                         size="small"
                         edge="end"
                         color="inherit"
-                        disabled={store.currentList != null}
+                        disabled={store.currentList !== null}
                         onClick={handleCreateNewList}>
                         <AddOutlinedIcon style={{ fontSize: 60 }} />
                     </IconButton>
-                    <Typography color={store.currentList != null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
-                    <Typography variant="h4">{text}</Typography>
+                    <Typography color={store.currentList !== null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
                 </div>;
         else if(store.allListsSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== "" ? store.searchBarText+" Lists" : "All Lists"}</Typography>
+                    <Typography variant="h2">{store.searchBarText !== "" && store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
                 </div>;
         else if(store.usersSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== "" ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
+                    <Typography variant="h2">{store.searchBarText !== ""  && store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
                 </div>;
         else if(store.communityListsSelected)
             statusbar =
                 <div id="top5-statusbar">
                     <Typography variant="h2">Community Lists</Typography>
                 </div>;
-        return (
-            statusbar
-        );
     }
     else if(auth.loggedInAsGuest) {
-        let text ="";
-        if (store.currentList)
-            text = store.currentList.name;
-        return (
-            <div id="top5-statusbar">
-                <Typography variant="h4">{text}</Typography>
-            </div>
-        );
+        if(store.allListsSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">{store.searchBarText !== "" || store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
+                </div>;
+        else if(store.usersSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">{store.searchBarText !== "" || store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
+                </div>;
+        else if(store.communityListsSelected)
+            statusbar =
+                <div id="top5-statusbar">
+                    <Typography variant="h2">Community Lists</Typography>
+                </div>;
     }
-    else return null;
+    return (
+        statusbar
+    );
 }
 
 export default Statusbar;

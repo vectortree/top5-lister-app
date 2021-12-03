@@ -166,6 +166,7 @@ function ListCard(props) {
                 sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             
                 style={{
+                    display: 'inline',
                     fontSize: '20pt',
                     borderRadius: 15,
                     backgroundColor: "#d8d4f4",
@@ -287,22 +288,23 @@ function ListCard(props) {
                                 ))
                             }
                         </List>
-                        <TextField
-                            justifyContent="flex-end"
-                            disabled={auth.loggedInAsGuest}
-                            margin="normal"
-                            size="small"
-                            value={text}
-                            placeholder="Add Comment"
-                            style={{ backgroundColor:"white" }}
-                            required
-                            fullWidth
-                            name="comment"
-                            autoComplete="Comment"
-                            onKeyPress={handleKeyPress}
-                            onChange={handleChange}
-                            autoFocus
-                        />
+                        { auth.loggedInAsGuest ? null :
+                            <TextField
+                                justifyContent="flex-end"
+                                margin="normal"
+                                size="small"
+                                value={text}
+                                placeholder="Add Comment"
+                                style={{ backgroundColor:"white" }}
+                                required
+                                fullWidth
+                                name="comment"
+                                autoComplete="Comment"
+                                onKeyPress={handleKeyPress}
+                                onChange={handleChange}
+                                autoFocus
+                            />
+                        }
                     </Grid>
                     <Grid item>
                         <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
@@ -564,22 +566,23 @@ function ListCard(props) {
                             ))
                         }
                     </List>
-                    <TextField
-                        justifyContent="flex-end"
-                        disabled={auth.loggedInAsGuest}
-                        margin="normal"
-                        size="small"
-                        value={text}
-                        placeholder="Add Comment"
-                        style={{ backgroundColor:"white" }}
-                        required
-                        fullWidth
-                        name="comment"
-                        autoComplete="Comment"
-                        onKeyPress={handleKeyPress}
-                        onChange={handleChange}
-                        autoFocus
-                    />
+                    { auth.loggedInAsGuest ? null :
+                        <TextField
+                            justifyContent="flex-end"
+                            margin="normal"
+                            size="small"
+                            value={text}
+                            placeholder="Add Comment"
+                            style={{ backgroundColor:"white" }}
+                            required
+                            fullWidth
+                            name="comment"
+                            autoComplete="Comment"
+                            onKeyPress={handleKeyPress}
+                            onChange={handleChange}
+                            autoFocus
+                        />
+                    }
                 </Grid>
                 <Grid item>
                     <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >

@@ -33,8 +33,9 @@ const HomeScreen = () => {
     const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
-        if(auth.loggedIn)
+        if(auth.loggedIn) {
             store.loadLists();
+        }
         else if(auth.loggedInAsGuest)
             store.loadCommunityLists();
     }, []);
@@ -51,7 +52,32 @@ const HomeScreen = () => {
         setAnchorEl(null);
     };
 
-    const handleClick = () => {
+    const handleSortByPublishDateNewest = () => {
+        store.sortByPublishDateNewest();
+    }
+
+    const handleSortByPublishDateOldest = () => {
+        store.sortByPublishDateOldest();
+    }
+
+    const handleSortByUpdateDateNewest = () => {
+        store.sortByUpdateDateNewest();
+    }
+
+    const handleSortByUpdateDateOldest = () => {
+        store.sortByUpdateDateOldest();
+    }
+
+    const handleSortByViews = () => {
+        store.sortByViews();
+    }
+
+    const handleSortByLikes = () => {
+        store.sortByLikes();
+    }
+
+    const handleSortByDislikes = () => {
+        store.sortByDislikes();
     }
     
     function handleKeyPress(event) {
@@ -101,15 +127,19 @@ const HomeScreen = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem style={{ height: 25 }} onClick={handleClick}>Publish Date (Newest)</MenuItem>
+            { !store.communityListsSelected ?
+            <MenuItem style={{ height: 25 }} onClick={handleSortByPublishDateNewest}>Publish Date (Newest)</MenuItem> :
+            <MenuItem style={{ height: 25 }} onClick={handleSortByUpdateDateNewest}>Update Date (Newest)</MenuItem> }
             <Divider style={{ background: 'black' }}/>
-            <MenuItem style={{ height: 25 }} onClick={handleClick}>Publish Date (Oldest)</MenuItem>
+            { !store.communityListsSelected ?
+            <MenuItem style={{ height: 25 }} onClick={handleSortByPublishDateOldest}>Publish Date (Oldest)</MenuItem> :
+            <MenuItem style={{ height: 25 }} onClick={handleSortByUpdateDateOldest}>Update Date (Oldest)</MenuItem> }
             <Divider style={{ background: 'black' }}/>
-            <MenuItem style={{ height: 25 }} onClick={handleClick}>Views</MenuItem>
+            <MenuItem style={{ height: 25 }} onClick={handleSortByViews}>Views</MenuItem>
             <Divider style={{ background: 'black' }}/>
-            <MenuItem style={{ height: 25 }} onClick={handleClick}>Likes</MenuItem>
+            <MenuItem style={{ height: 25 }} onClick={handleSortByLikes}>Likes</MenuItem>
             <Divider style={{ background: 'black' }}/>
-            <MenuItem style={{ height: 25 }} onClick={handleClick}>Dislikes</MenuItem>
+            <MenuItem style={{ height: 25 }} onClick={handleSortByDislikes}>Dislikes</MenuItem>
         </Menu>
     );
     return (

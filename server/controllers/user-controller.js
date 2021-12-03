@@ -80,16 +80,17 @@ registerUser = async (req, res) => {
                     errorMessage: "Both the provided username and email address have already been taken."
                 })
         }
-
         const saltRounds = 10;
         const salt = await bcrypt.genSalt(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
 
         const newUser = new User({
-            firstName, lastName, userName, email, passwordHash
+            firstName: firstName, lastName: lastName, userName: userName, email: email, passwordHash: passwordHash
         });
         const savedUser = await newUser.save();
 
+        // LOGIN THE USER
+        const token = auth.signToken(savedUser);
         await res.cookie("token", token, {
             httpOnly: true,
             secure: true,
@@ -100,9 +101,10 @@ registerUser = async (req, res) => {
                 firstName: savedUser.firstName,
                 lastName: savedUser.lastName,
                 userName: savedUser.userName,
-                email: savedUser.email
+                email: savedUser.email,
             }
         }).send();
+
     } catch (err) {
         console.error(err);
         res.status(500).send();
