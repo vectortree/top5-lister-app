@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import AuthContext from '../auth';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import IconButton from '@mui/material/IconButton';
-import { useHistory } from 'react-router-dom'
 
 /*
     Our Status bar React component goes at the bottom of our UI.
@@ -15,10 +14,8 @@ import { useHistory } from 'react-router-dom'
 function Statusbar() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
-    store.history = useHistory();
-
     function handleCreateNewList() {
-        store.makeNewList();
+        store.createNewList();
     }
     let statusbar = "";
     let text ="";

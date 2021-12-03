@@ -47,7 +47,12 @@ function WorkspaceScreen() {
 
     
     useEffect(() => {
-        if(store.currentList === null || store.currentList.ownerEmail !== auth.user.email) {
+        if(store.currentList === null) {
+            let data = store.history.location.state?.data;
+            if(data) store.setCurrentList(data);
+            else store.history.push("/");
+        }
+        else if(store.currentList.ownerEmail !== auth.user.email) {
             let data = store.history.location.state?.data;
             if(data) store.setCurrentList(data);
             else store.history.push("/");
@@ -93,42 +98,29 @@ function WorkspaceScreen() {
         if(buttonType === "Save") {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            let list = store.currentList;
-            list.name = data.get("list-name").trim();
-            list.items[0] = data.get("item-1").trim();
-            list.items[1] = data.get("item-2").trim();
-            list.items[2] = data.get("item-3").trim();
-            list.items[3] = data.get("item-4").trim();
-            list.items[4] = data.get("item-5").trim();
-            if(store.newListCreatedFlag) {
-                store.createNewList(list);
-            }
-            else {
-                store.updateList(list);
-            }
-            store.loadLists();
-            store.history.push('/');
-            
+            store.currentList.name = data.get("list-name").trim();
+            store.currentList.items[0] = data.get("item-1").trim();
+            store.currentList.items[1] = data.get("item-2").trim();
+            store.currentList.items[2] = data.get("item-3").trim();
+            store.currentList.items[3] = data.get("item-4").trim();
+            store.currentList.items[4] = data.get("item-5").trim();
+            store.updateCurrentList();
+
         }
         else if(buttonType === "Publish") {
             event.preventDefault();
             const data = new FormData(event.currentTarget);
-            let list = store.currentList;
-            list.name = data.get("list-name").trim();
-            list.items[0] = data.get("item-1").trim();
-            list.items[1] = data.get("item-2").trim();
-            list.items[2] = data.get("item-3").trim();
-            list.items[3] = data.get("item-4").trim();
-            list.items[4] = data.get("item-5").trim();
-            if(store.newListCreatedFlag) {
-                store.createNewList(list);
-            }
-            else {
-                store.updateList(list);
-            }
+            let newDate = new Date().toString();
+            store.currentList.name = data.get("list-name").trim();
+            store.currentList.items[0] = data.get("item-1").trim();
+            store.currentList.items[1] = data.get("item-2").trim();
+            store.currentList.items[2] = data.get("item-3").trim();
+            store.currentList.items[3] = data.get("item-4").trim();
+            store.currentList.items[4] = data.get("item-5").trim();
+            store.currentList.isPublished = true;
+            store.currentList.publishedDate = newDate;
+            store.updateCurrentList();
             store.updateCommunityList(store.currentList);
-            store.loadLists();
-            store.history.push('/');
         }
     }
     

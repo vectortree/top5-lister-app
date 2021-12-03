@@ -41,7 +41,6 @@ body {
 #splash-screen {
   background-image: linear-gradient(to bottom, #c8c4c4, #e8e4e4);
   position: relative;
-  display: inline;
 }
 
 #title {

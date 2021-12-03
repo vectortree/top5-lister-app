@@ -53,8 +53,7 @@ function GlobalStoreContextProvider(props) {
         homeSelected: false,
         allListsSelected: false,
         usersSelected: false,
-        communityListsSelected: false,
-        newListCreatedFlag: false
+        communityListsSelected: false
     });
     
     const history = useHistory();
@@ -208,8 +207,7 @@ function GlobalStoreContextProvider(props) {
                     homeSelected: store.homeSelected,
                     allListsSelected: store.allListsSelected,
                     usersSelected: store.usersSelected,
-                    communityListsSelected: store.communityListsSelected,
-                    newListCreatedFlag: payload.newListCreatedFlag
+                    communityListsSelected: store.communityListsSelected
                 });
             }
             case GlobalStoreActionType.SORT_LISTS: {
@@ -347,11 +345,11 @@ function GlobalStoreContextProvider(props) {
         history.push("/");
     }
 
-    // THIS FUNCTION MAKES A NEW LIST
-    store.makeNewList = function () {
+    // THIS FUNCTION CREATES A NEW LIST
+    store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
         let newDate = new Date().toString();
-        let newList = {
+        let payload = {
             name: newListName,
             items: ["?", "?", "?", "?", "?"],
             userName: auth.user.userName,
@@ -365,26 +363,19 @@ function GlobalStoreContextProvider(props) {
             userLikes: [],
             userDislikes: []
         };
-        storeReducer({
-            type: GlobalStoreActionType.SET_CURRENT_LIST,
-            payload: {
-                currentList: newList,
-                newListCreatedFlag: true
-            }
-        });
-        store.history.push("/top5list/" + newList._id, { data: newList._id });
-    }
-
-    store.createNewList = async function (payload) {
         const response = await api.createTop5List(payload);
         if (response.data.success) {
+            let newList = response.data.top5List;
             storeReducer({
                 type: GlobalStoreActionType.CREATE_NEW_LIST,
                 payload: {
-                    currentList: null,
+                    currentList: newList,
                     newListCounter: store.newListCounter + 1
                 }
             });
+
+            // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+            history.push("/top5list/" + newList._id, { data: newList._id });
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
@@ -876,7 +867,6 @@ function GlobalStoreContextProvider(props) {
                     type: GlobalStoreActionType.SET_CURRENT_LIST,
                     payload: {
                         currentList: top5List,
-                        newListCreatedFlag: false
                     }
                 });
                 history.push("/top5list/" + top5List._id, { data: top5List._id });
@@ -886,14 +876,7 @@ function GlobalStoreContextProvider(props) {
 
     store.updateCurrentList = async function () {
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
-        if (response.data.success) {
-            storeReducer({
-                type: GlobalStoreActionType.SET_CURRENT_LIST,
-                payload: {
-                    currentList: store.currentList,
-                }
-            });
-        }
+        history.push('/');
     }
 
     store.updateList = async function (list) {

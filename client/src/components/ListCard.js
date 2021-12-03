@@ -56,7 +56,7 @@ function ListCard(props) {
                     value: comment
                 };
                 setText("");
-                list.comments.push(pair);
+                list.comments.unshift(pair);
                 if(store.communityListsSelected) {
                     store.updateCommunityListInfo(list);
                 }
@@ -166,7 +166,6 @@ function ListCard(props) {
                 sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
             
                 style={{
-                    display: 'inline',
                     fontSize: '20pt',
                     borderRadius: 15,
                     backgroundColor: "#d8d4f4",
