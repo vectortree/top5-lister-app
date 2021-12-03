@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import Top5Item from './Top5Item.js'
 import List from '@mui/material/List'
 import { Typography } from '@mui/material'
 import AuthContext from '../auth'
@@ -32,30 +31,41 @@ import Button from '@mui/material/Button';
     
     @author McKilla Gorilla
 */
+
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
     const { auth } = useContext(AuthContext);
     const [flag, setFlag] = useState(false);
-    const [listName, setListName] = useState(store.currentList.name);
-    const [item1, setItem1] = useState(store.currentList.items[0]);
-    const [item2, setItem2] = useState(store.currentList.items[1]);
-    const [item3, setItem3] = useState(store.currentList.items[2]);
-    const [item4, setItem4] = useState(store.currentList.items[3]);
-    const [item5, setItem5] = useState(store.currentList.items[4]);
+    const [listName, setListName] = useState("");
+    const [item1, setItem1] = useState("");
+    const [item2, setItem2] = useState("");
+    const [item3, setItem3] = useState("");
+    const [item4, setItem4] = useState("");
+    const [item5, setItem5] = useState("");
     const [buttonType, setButtonType ] = useState(null);
     store.history = useHistory();
 
-    
     useEffect(() => {
         if(store.currentList === null) {
             let data = store.history.location.state?.data;
-            if(data) store.setCurrentList(data);
+            if(data) {
+                store.currentList = data;
+                setListName(data.name);
+                setItem1(data.items[0]);
+                setItem2(data.items[1]);
+                setItem3(data.items[2]);
+                setItem4(data.items[3]);
+                setItem5(data.items[4]);
+            }
             else store.history.push("/");
         }
-        else if(store.currentList.ownerEmail !== auth.user.email) {
-            let data = store.history.location.state?.data;
-            if(data) store.setCurrentList(data);
-            else store.history.push("/");
+        else {
+            setListName(store.currentList.name);
+            setItem1(store.currentList.items[0]);
+            setItem2(store.currentList.items[1]);
+            setItem3(store.currentList.items[2]);
+            setItem4(store.currentList.items[3]);
+            setItem5(store.currentList.items[4]);
         }
     }, []);
 
@@ -166,21 +176,6 @@ function WorkspaceScreen() {
         || item4.trim().localeCompare(item5.trim(), undefined, {sensitivity: 'accent'})===0);
     }
 
-    let editItems = "";
-    if (store.currentList) {
-        editItems = 
-            <List id="edit-items" sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {
-                    store.currentList.items.map((item, index) => (
-                        <Top5Item 
-                            key={'top5-item-' + (index+1)}
-                            text={item}
-                            index={index} 
-                        />
-                    ))
-                }
-            </List>;
-    }
     return (
         <Box>
             <AppBar color="transparent" style={{boxShadow: "none"}} position="relative">
@@ -242,7 +237,8 @@ function WorkspaceScreen() {
                 </Toolbar>
             </AppBar>
             <Card
-                    sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
+                    sx={{ height: '90%', width: '80%', bgcolor: 'background.paper',
+                    marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                     disabled={store.isListNameEditActive}
                     style={{
                         fontSize: '20pt',
@@ -266,7 +262,7 @@ function WorkspaceScreen() {
                                 onChange={handleChangeListName}
                                 name="list-name"
                                 autoComplete="off"
-                                size="small" style={{ backgroundColor: "white" }} defaultValue={store.currentList.name}/>
+                                size="small" style={{ backgroundColor: "white" }} defaultValue={store.currentList ? store.currentList.name : store.history.location.state?.data.name}/>
                                 <Box style={{paddingTop: "2%"}} ></Box>
                                 <TextField
                                 required
@@ -276,7 +272,7 @@ function WorkspaceScreen() {
                                 name="item-1"
                                 autoComplete="off"
                          
-                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[0]}/>
+                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[0] : store.history.location.state?.data.items[0]}/>
                                 <TextField
                                 required
                                 fullWidth
@@ -285,7 +281,7 @@ function WorkspaceScreen() {
                                 name="item-2"
                                 autoComplete="off"
                               
-                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[1]}/>
+                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[1] : store.history.location.state?.data.items[1]}/>
                                 <TextField
                                 required
                                 fullWidth
@@ -294,7 +290,7 @@ function WorkspaceScreen() {
                                 name="item-3"
                                 autoComplete="off"
                             
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[2]}/>
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[2]: store.history.location.state?.data.items[2]}/>
                                 <TextField
                                 required
                                 fullWidth
@@ -303,7 +299,7 @@ function WorkspaceScreen() {
                                 name="item-4"
                                 autoComplete="off"
                        
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[3]}/>
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[3] : store.history.location.state?.data.items[3]}/>
                                 <TextField
                                 required
                                 fullWidth
@@ -312,7 +308,7 @@ function WorkspaceScreen() {
                                 name="item-5"
                                 autoComplete="off"
                            
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList.items[4]}/>
+                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[4] : store.history.location.state?.data.items[4]}/>
                                 <Button
                                     onClick={handleSaveList}
                                     type="submit"

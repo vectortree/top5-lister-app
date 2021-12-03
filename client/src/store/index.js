@@ -375,7 +375,7 @@ function GlobalStoreContextProvider(props) {
             });
 
             // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-            history.push("/top5list/" + newList._id, { data: newList._id });
+            history.push("/top5list/" + newList._id, { data: newList });
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
@@ -869,7 +869,7 @@ function GlobalStoreContextProvider(props) {
                         currentList: top5List,
                     }
                 });
-                history.push("/top5list/" + top5List._id, { data: top5List._id });
+                history.push("/top5list/" + top5List._id, { data: top5List });
             }
         }
     }

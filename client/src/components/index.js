@@ -6,7 +6,6 @@ import ListCard from './ListCard'
 import RegisterScreen from './RegisterScreen'
 import SplashScreen from './SplashScreen'
 import Statusbar from './Statusbar'
-import Top5Item from './Top5Item'
 import WorkspaceScreen from './WorkspaceScreen'
 import SignInSide from './SignInSide'
 import LoginErrorModal from './LoginErrorModal'
@@ -25,8 +24,7 @@ export {
     ListCard, 
     RegisterScreen,
     SplashScreen,
-    Statusbar, 
-    Top5Item, 
+    Statusbar,
     WorkspaceScreen,
     SignInSide,
     LoginErrorModal,
