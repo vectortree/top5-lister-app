@@ -177,6 +177,7 @@ function WorkspaceScreen() {
     }
 
     return (
+        <div id='workspace-screen'>
         <Box>
             <AppBar color="transparent" style={{boxShadow: "none"}} position="relative">
                 <Toolbar >
@@ -236,18 +237,23 @@ function WorkspaceScreen() {
                 </Box>
                 </Toolbar>
             </AppBar>
+            <Box style={{margin: 'auto', display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center'}}>
             <Card
-                    sx={{ height: '90%', width: '80%', bgcolor: 'background.paper',
+                    fullWidth
+                    sx={{ height: 'auto', width: '95%', bgcolor: 'background.paper',
                     marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                     disabled={store.isListNameEditActive}
                     style={{
                         fontSize: '20pt',
                         borderRadius: 15,
                         backgroundColor: "#d8d4f4",
-                        alignItems: "flex-start",
-                        position: "relative"
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignContent: "center",
                     }}>
                     <Card
+                        fullWidth
                         sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
                         disabled={store.isListNameEditActive}
                         style={{
@@ -257,13 +263,21 @@ function WorkspaceScreen() {
                             alignItems: "center"
                         }}>
                         {
-                            <Box component="form" onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }} onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
+                            <Box style={{maxWidth: "98%"}} component="form" onKeyPress={(e) => { e.key === 'Enter' && e.preventDefault(); }} onSubmit={handleSubmit} noValidate sx={{pl: 1, flexGrow: 1 }}>
+                                <Box style={{paddingTop: "1%"}} ></Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                                 <TextField id="list-name"
+                                required
+                                fullWidth
                                 onChange={handleChangeListName}
                                 name="list-name"
                                 autoComplete="off"
-                                size="small" style={{ backgroundColor: "white" }} defaultValue={store.currentList ? store.currentList.name : store.history.location.state?.data.name}/>
+                                size="small" style={{ backgroundColor: "white", borderRadius: 15 }} defaultValue={store.currentList ? store.currentList.name : store.history.location.state?.data.name}/>
+                                </Box>
                                 <Box style={{paddingTop: "2%"}} ></Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Typography color="#d8ac34" variant="h3">1.</Typography>
+                                <Typography color="#d8ac34" variant="h3"> &nbsp;</Typography>
                                 <TextField
                                 required
                                 fullWidth
@@ -271,8 +285,11 @@ function WorkspaceScreen() {
                                 onChange={handleChangeItem1}
                                 name="item-1"
                                 autoComplete="off"
-                         
-                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[0] : store.history.location.state?.data.items[0]}/>
+                                style={{ backgroundColor: "#d8ac34", borderRadius: 15 }} defaultValue={store.currentList ? store.currentList.items[0] : store.history.location.state?.data.items[0]}/>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Typography color="#d8ac34" variant="h3">2.</Typography>
+                                <Typography color="#d8ac34" variant="h3"> &nbsp;</Typography>
                                 <TextField
                                 required
                                 fullWidth
@@ -281,7 +298,11 @@ function WorkspaceScreen() {
                                 name="item-2"
                                 autoComplete="off"
                               
-                                style={{ backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[1] : store.history.location.state?.data.items[1]}/>
+                                style={{ backgroundColor: "#d8ac34", borderRadius: 15  }} defaultValue={store.currentList ? store.currentList.items[1] : store.history.location.state?.data.items[1]}/>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Typography color="#d8ac34" variant="h3">3.</Typography>
+                                <Typography color="#d8ac34" variant="h3"> &nbsp;</Typography>
                                 <TextField
                                 required
                                 fullWidth
@@ -290,7 +311,11 @@ function WorkspaceScreen() {
                                 name="item-3"
                                 autoComplete="off"
                             
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[2]: store.history.location.state?.data.items[2]}/>
+                                style={{backgroundColor: "#d8ac34", borderRadius: 15  }} defaultValue={store.currentList ? store.currentList.items[2]: store.history.location.state?.data.items[2]}/>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Typography color="#d8ac34" variant="h3">4.</Typography>
+                                <Typography color="#d8ac34" variant="h3"> &nbsp;</Typography>
                                 <TextField
                                 required
                                 fullWidth
@@ -299,7 +324,11 @@ function WorkspaceScreen() {
                                 name="item-4"
                                 autoComplete="off"
                        
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[3] : store.history.location.state?.data.items[3]}/>
+                                style={{backgroundColor: "#d8ac34",borderRadius: 15  }} defaultValue={store.currentList ? store.currentList.items[3] : store.history.location.state?.data.items[3]}/>
+                                </Box>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                                <Typography color="#d8ac34" variant="h3">5.</Typography>
+                                <Typography color="#d8ac34" variant="h3"> &nbsp;</Typography>
                                 <TextField
                                 required
                                 fullWidth
@@ -308,12 +337,14 @@ function WorkspaceScreen() {
                                 name="item-5"
                                 autoComplete="off"
                            
-                                style={{backgroundColor: "#d8ac34" }} defaultValue={store.currentList ? store.currentList.items[4] : store.history.location.state?.data.items[4]}/>
+                                style={{backgroundColor: "#d8ac34",borderRadius: 15  }} defaultValue={store.currentList ? store.currentList.items[4] : store.history.location.state?.data.items[4]}/>
+                                </Box>
+                                <Box style={{paddingTop: "2%"}} ></Box>
                                 <Button
                                     onClick={handleSaveList}
                                     type="submit"
                                     variant="contained"
-                                    sx={{ mt: 3, mb: 5, ml: 2 }}
+        
                                     >
                                     Save
                                 </Button>
@@ -322,16 +353,18 @@ function WorkspaceScreen() {
                                     disabled={!isFormValid()}
                                     type="submit"
                                     variant="contained"
-                                    sx={{ mt: 3, mb: 5, ml: 1}}
+                                    
                                     >
                                     Publish
                                 </Button>
+                                <Box style={{paddingBottom: "1%"}} ></Box>
                             </Box>
                         }
                     </Card>
+                    <Box style={{paddingBottom: "1.5%"}} ></Box>
                 </Card>
-            <Statusbar/>
-        </Box>)
+                </Box>
+        </Box></div>)
 }
 
 export default WorkspaceScreen;

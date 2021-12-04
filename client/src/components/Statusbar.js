@@ -23,7 +23,7 @@ function Statusbar() {
         text = store.currentList.name;
     
     if(auth.loggedIn) {
-        if(store.homeSelected)
+        if(store.homeSelected || store.history.location.state?.data)
             statusbar =
                 <div id="top5-statusbar">
                     <IconButton 
@@ -33,9 +33,9 @@ function Statusbar() {
                         color="inherit"
                         disabled={store.currentList !== null}
                         onClick={handleCreateNewList}>
-                        <AddOutlinedIcon style={{ fontSize: 60 }} />
+                        <AddOutlinedIcon style={{ fontSize: 45 }} />
                     </IconButton>
-                    <Typography color={store.currentList !== null ? '#989494' : 'black'} variant="h2">Your Lists</Typography>
+                    <Typography style={{ fontSize: 35}} color={store.currentList !== null ? '#989494' : 'black'}>Your Lists</Typography>
                 </div>;
         else if(store.allListsSelected)
             statusbar =

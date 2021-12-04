@@ -50,8 +50,8 @@ export default function SignInSide() {
   let signInSide = <Redirect to="/" />;
   if(!auth.loggedIn) {
     signInSide =
-    <Box style={{ backgroundColor: 'white'}}>
-      <Box style={{paddingTop: "4.5%"}} ></Box>
+    <Box position='relative' style={{ backgroundColor: 'white', overflow: 'scroll', height: '100%'}}>
+      <Box style={{paddingTop: "2%"}} ></Box>
       <Container component="main" maxWidth="xs">
         <Box
           sx={{
@@ -106,7 +106,6 @@ export default function SignInSide() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-      <Box style={{paddingBottom: "4.5%"}} ></Box>
     </Box>
   }
 

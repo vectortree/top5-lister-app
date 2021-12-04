@@ -48,8 +48,8 @@ export default function RegisterScreen() {
     let registerScreen = <Redirect to="/" />;
     if(!auth.loggedIn) {
         registerScreen =
-            <Box style={{ backgroundColor: 'white'}}>
-                <Box style={{paddingTop: "1%"}} ></Box>
+            <Box position='relative' style={{ backgroundColor: 'white', overflow: 'scroll', height: '100%'}}>
+                <Box style={{paddingTop: "2%"}} ></Box>
                 <Container component="main" maxWidth="xs">
                     <Box
                         sx={{
@@ -147,7 +147,7 @@ export default function RegisterScreen() {
                     </Box>
                     <Copyright sx={{ mt: 5 }} />
                 </Container>
-                <Box style={{paddingBottom: "1%"}} ></Box>
+                
             </Box>;
     }
     return (

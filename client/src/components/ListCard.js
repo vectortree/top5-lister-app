@@ -263,7 +263,7 @@ function ListCard(props) {
                     </Box>
                     </Grid>
                     <Grid item sx={{pl: 1, flexShrink: 1}} >
-                        <List style={{maxHeight: '100vh', overflow: 'auto'}}>
+                        <List style={{maxHeight: '100vh', overflow: 'scroll'}}>
                             {
                                 list.comments.map((item) => (
                                     <Card
@@ -277,7 +277,7 @@ function ListCard(props) {
                                     }}>
                                         <CardContent sx={{ flex: '1 0 auto' }}>
                                             <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
-                                                <Link to='#'>{list.userName}</Link>
+                                                <Link to='#'>{item.key}</Link>
                                             </Typography>
                                             <Typography color="black" variant="h6" component="div" style={{ fontSize: '15pt'}}>
                                                 {item.value}
@@ -360,7 +360,7 @@ function ListCard(props) {
                     <Box sx={{ pl: 1, flexGrow: 1 }}>
                         <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                         <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
-                        <Typography component={Link} to='#' onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
+                        <Typography component={Link} to='#' onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt', color: 'red' }} >Edit</Typography>
                     </Box>
                 </Grid>
                 <Grid item>
@@ -417,7 +417,7 @@ function ListCard(props) {
                     </Box>
                     }
                 </Card>
-                <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt' }} >Edit</Typography>
+                <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt', color: 'red'}} >Edit</Typography>
             </Box>
                 <Box style={{ alignSelf:"flex-end" }} >
                     <IconButton disableRipple={true} onClick={(event) => {
@@ -541,7 +541,7 @@ function ListCard(props) {
                 </Box>
                 </Grid>
                 <Grid item sx={{pl: 1, flexShrink: 1}} >
-                    <List style={{maxHeight: '100vh', overflow: 'auto'}}>
+                    <List style={{maxHeight: '100vh', overflow: 'scroll'}}>
                         {
                             list.comments.map((item) => (
                                 <Card
@@ -555,7 +555,7 @@ function ListCard(props) {
                                 }}>
                                     <CardContent sx={{ flex: '1 0 auto' }}>
                                         <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
-                                            <Link to='#'>{list.userName}</Link>
+                                            <Link to='#'>{item.key}</Link>
                                         </Typography>
                                         <Typography color="black" variant="h6" component="div" style={{ fontSize: '15pt'}}>
                                             {item.value}

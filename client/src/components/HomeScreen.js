@@ -19,6 +19,7 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
 import Statusbar from './Statusbar.js';
 /*
@@ -100,7 +101,11 @@ const HomeScreen = () => {
     let listCard = "";
     if (store) {
         listCard = 
-            <List style={{maxHeight: '100vh', overflow: 'auto'}}>
+            <Box position='relative'
+            style={{ 
+                backgroundColor: '#c8c4c4',
+                }}>
+            <List>
             {
                 store.lists.map((list) => (
                     <ListCard
@@ -110,7 +115,7 @@ const HomeScreen = () => {
                     />
                 ))
             }
-            </List>;
+            </List></Box>;
     }
     const menu = (
         <Menu
@@ -143,6 +148,7 @@ const HomeScreen = () => {
         </Menu>
     );
     return (
+        <div id="home-screen">
         <Box>
             <AppBar color="transparent" style={{boxShadow: "none"}} position="relative">
                 <Toolbar >
@@ -201,11 +207,9 @@ const HomeScreen = () => {
                 </Toolbar>
             </AppBar>
             { menu }
-            <div id="list-selector-list">
-                {listCard}
-            </div>
-            <Statusbar/>
-        </Box>)
+            {listCard}
+        </Box>
+        </div>)
 }
 
 export default HomeScreen;

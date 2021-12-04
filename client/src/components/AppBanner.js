@@ -116,7 +116,7 @@ export default function AppBanner() {
 
     return (
         <Box>
-            <AppBar style={{ backgroundColor: '#e8e4e4' }} position="relative">
+            <AppBar style={{ backgroundColor: '#e8e4e4'}} position="relative">
                 <Toolbar>
                     <Typography                        
                         variant="h4"
