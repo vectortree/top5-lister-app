@@ -72,13 +72,11 @@ function ListCard(props) {
 
     function handleIncrementViewCount() {
         setExpanded(true);
-        if (auth.loggedInAsGuest || (auth.loggedIn && list.userName !== auth.user.userName)) {
-            list.numberOfViews = list.numberOfViews+1;
-            if(store.communityListsSelected) {
-                store.updateCommunityListInfo(list);
-            }
-            else store.updateList(list);
+        list.numberOfViews = list.numberOfViews+1;
+        if(store.communityListsSelected) {
+            store.updateCommunityListInfo(list);
         }
+        else store.updateList(list);
     }
 
     function hasBeenLiked(id) {
