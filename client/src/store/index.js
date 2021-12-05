@@ -230,10 +230,10 @@ function GlobalStoreContextProvider(props) {
                     currentList: null,
                     newListCounter: store.newListCounter,
                     listMarkedForDeletion: null,
-                    homeSelected: true,
-                    allListsSelected: false,
-                    usersSelected: false,
-                    communityListsSelected: false
+                    homeSelected: store.homeSelected,
+                    allListsSelected: store.allListsSelected,
+                    usersSelected: store.usersSelected,
+                    communityListsSelected: store.communityListsSelected
                 });
             }
             case GlobalStoreActionType.UPDATE_COMMUNITY_LIST: {
@@ -545,7 +545,7 @@ function GlobalStoreContextProvider(props) {
         let sortedLists = store.getSortedLists();
         sortedLists.sort(function(x, y) {
             let keyX = x.numberOfViews;
-            let keyY = new Date(y.numberOfViews);
+            let keyY = y.numberOfViews;
             if (keyX < keyY) return 1;
             if (keyX > keyY) return -1;
             return 0;
@@ -566,7 +566,7 @@ function GlobalStoreContextProvider(props) {
         let sortedLists = store.getSortedLists();
         sortedLists.sort(function(x, y) {
             let keyX = x.numberOfLikes;
-            let keyY = new Date(y.numberOfLikes);
+            let keyY = y.numberOfLikes;
             if (keyX < keyY) return 1;
             if (keyX > keyY) return -1;
             return 0;
@@ -588,7 +588,7 @@ function GlobalStoreContextProvider(props) {
         let sortedLists = store.getSortedLists();
         sortedLists.sort(function(x, y) {
             let keyX = x.numberOfDislikes;
-            let keyY = new Date(y.numberOfDislikes);
+            let keyY = y.numberOfDislikes;
             if (keyX < keyY) return 1;
             if (keyX > keyY) return -1;
             return 0;
@@ -609,7 +609,7 @@ function GlobalStoreContextProvider(props) {
     store.sortByUpdateDateNewest = function() {
         let sortedLists = store.lists;
         sortedLists.sort(function(x, y) {
-            let keyX = x.updatedDate;
+            let keyX = new Date(x.updatedDate);
             let keyY = new Date(y.updatedDate);
             if (keyX < keyY) return 1;
             if (keyX > keyY) return -1;
@@ -625,7 +625,7 @@ function GlobalStoreContextProvider(props) {
     store.sortByUpdateDateOldest = function() {
         let sortedLists = store.getSortedLists();
         sortedLists.sort(function(x, y) {
-            let keyX = x.updatedDate;
+            let keyX = new Date(x.updatedDate);
             let keyY = new Date(y.updatedDate);
             if (keyX < keyY) return -1;
             if (keyX > keyY) return 1;

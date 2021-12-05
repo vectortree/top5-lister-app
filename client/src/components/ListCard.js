@@ -72,11 +72,13 @@ function ListCard(props) {
 
     function handleIncrementViewCount() {
         setExpanded(true);
-        list.numberOfViews = list.numberOfViews+1;
-        if(store.communityListsSelected) {
-            store.updateCommunityListInfo(list);
+        if (auth.loggedInAsGuest || (auth.loggedIn && list.userName !== auth.user.userName)) {
+            list.numberOfViews = list.numberOfViews+1;
+            if(store.communityListsSelected) {
+                store.updateCommunityListInfo(list);
+            }
+            else store.updateList(list);
         }
-        else store.updateList(list);
     }
 
     function hasBeenLiked(id) {
@@ -175,6 +177,8 @@ function ListCard(props) {
                     <Grid item>       
                     <Box sx={{ pl: 1, flexGrow: 1 }}>
                         <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Typography variant="subtitle1" style={{ fontSize: '12pt'}}></Typography>
+                        <Box style={{paddingBottom: "34%"}} ></Box>
                         <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} display="inline">Updated:</Typography>
                         <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
                     </Box>
@@ -185,6 +189,7 @@ function ListCard(props) {
                                 <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
                             </IconButton>
                             {list.numberOfLikes}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
                                 <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
                             </IconButton>
@@ -203,7 +208,7 @@ function ListCard(props) {
                                 }} aria-label='delete'>
                                     <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
                                 </IconButton>
-                            </Box> : null
+                            </Box> : <Box style={{paddingBottom: "100%"}} ></Box>
                         }
                         <Box style={{ alignSelf: "end" }}>
                             <IconButton disableRipple={true} onClick={handleIncrementViewCount}>
@@ -229,11 +234,12 @@ function ListCard(props) {
                     backgroundColor: "#d8d4f4",
                 }}
             >
-                <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
-                    <Grid item>       
-                    <Box sx={{ pl: 1, flexGrow: 1 }}>
+                <Grid container container wrap='nowrap' direction="row" justifyContent="space-between">     
+                    <Grid item>
+                    <Box sx={{ pl: 1, flexGrow: 1 }} >
                         <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                         <Card
+                            fullWidth
                             id={list._id}
                             key={list._id}
                             sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
@@ -241,7 +247,11 @@ function ListCard(props) {
                                 fontSize: '20pt',
                                 borderRadius: 15,
                                 backgroundColor: "#302c74",
-                                alignItems: "flex-start"
+                                alignItems: "flex-center",
+                                maxWidth: 400,
+                                minWidth: 400,
+                                display: 'block',
+                                wordBreak: 'break-all'
                             }}>
                             {
                                 <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -258,12 +268,42 @@ function ListCard(props) {
                                 </Box>
                             }
                         </Card>
+                        <Box style={{paddingBottom: "3%"}} ></Box>
                         <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography>
                         <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.updatedDate).format('MMM D, YYYY')}</Typography>
                     </Box>
                     </Grid>
+                    <Grid item >
+                        <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
+                                <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfLikes}
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                                <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                            </IconButton>
+                            {list.numberOfDislikes}
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                            Views:
+                        </Typography>
+                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                    </Grid>
+                    <Grid item >
+                        { store.homeSelected ?
+                            <Box >
+                                <IconButton disableRipple={true} onClick={(event) => {
+                                    handleDeleteList(event, list._id)
+                                }} aria-label='delete'>
+                                    <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
+                                </IconButton>
+                            </Box> : null
+                        }
+                    </Grid>
                     <Grid item sx={{pl: 1, flexShrink: 1}} >
-                        <List style={{maxHeight: '100vh', overflow: 'scroll'}}>
+                        <Box style={{paddingTop: '2%'}}/>
+                        <List style={{ minWidth: 400, maxWidth: 400, maxHeight: 450, overflow: 'scroll'}}>
                             {
                                 list.comments.map((item) => (
                                     <Card
@@ -273,7 +313,9 @@ function ListCard(props) {
                                         borderRadius: 15,
                                         backgroundColor: "#d8ac34",
                                         color: "#302c74",
-                                        alignItems: "flex-start"
+                                        alignItems: "flex-start",
+                                        display: 'block',
+                                        wordBreak: 'break-all'
                                     }}>
                                         <CardContent sx={{ flex: '1 0 auto' }}>
                                             <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
@@ -306,32 +348,7 @@ function ListCard(props) {
                         }
                     </Grid>
                     <Grid item>
-                        <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
-                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
-                                <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
-                            </IconButton>
-                            {list.numberOfLikes}
-                            <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
-                                <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
-                            </IconButton>
-                            {list.numberOfDislikes}
-                        </Typography>
-                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
-                            Views:
-                        </Typography>
-                        <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
-                    </Grid>
-                    <Grid item>
-                        { store.homeSelected ?
-                            <Box>
-                                <IconButton disableRipple={true} onClick={(event) => {
-                                    handleDeleteList(event, list._id)
-                                }} aria-label='delete'>
-                                    <DeleteOutlinedIcon style={{fontSize:'30pt'}} />
-                                </IconButton>
-                            </Box> : null
-                        }
-                        <Box style={{ alignSelf: "end" }}>
+                        <Box style={{ alignContent: "end" }}>
                             <IconButton disableRipple={true} onClick={() => setExpanded(false)}>
                                 <KeyboardArrowUpIcon style={{fontSize:'30pt'}} />
                             </IconButton>
@@ -393,19 +410,25 @@ function ListCard(props) {
                 alignItems: "flex-start"
             }}
         >
+            <Grid container container wrap='nowrap' direction="row" justifyContent="space-between">
+            <Grid item>
             <Box sx={{ pl: 1, flexGrow: 1 }}>
                 <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                 <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                 <Card
+                    fullWidth
                     id={list._id}
                     key={list._id}
                     sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
-                
                     style={{
                         fontSize: '20pt',
                         borderRadius: 15,
                         backgroundColor: "#302c74",
-                        alignItems: "center"
+                        alignItems: "flex-center",
+                        maxWidth: 400,
+                        minWidth: 400,
+                        display: 'block',
+                        wordBreak: 'break-all'
                     }}>
                     {
                         <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -417,8 +440,11 @@ function ListCard(props) {
                     </Box>
                     }
                 </Card>
+                <Box style={{paddingBottom: "6%"}} ></Box>
                 <Typography component={Link} to="" onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt', color: 'red'}} >Edit</Typography>
             </Box>
+            </Grid>
+            <Grid item>
                 <Box style={{ alignSelf:"flex-end" }} >
                     <IconButton disableRipple={true} onClick={(event) => {
                         handleDeleteList(event, list._id)
@@ -431,6 +457,8 @@ function ListCard(props) {
                         <KeyboardArrowUpIcon style={{fontSize:'30pt'}} />
                     </IconButton>
                 </Box>
+            </Grid>
+            </Grid>
         </Card>;
     if(list.isPublished && !isExpanded)
     cardElement =
@@ -464,6 +492,7 @@ function ListCard(props) {
                             <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
                         </IconButton>
                         {list.numberOfLikes}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
                             <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
                         </IconButton>
@@ -514,6 +543,7 @@ function ListCard(props) {
                     <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
                     <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                     <Card
+                        fullWidth
                         id={list._id}
                         key={list._id}
                         sx={{ marginRight: '20px', marginLeft: '20px', marginTop: '20px', display: 'flex', p: 1 }}
@@ -521,7 +551,11 @@ function ListCard(props) {
                             fontSize: '20pt',
                             borderRadius: 15,
                             backgroundColor: "#302c74",
-                            alignItems: "flex-start"
+                            alignItems: "flex-start",
+                            maxWidth: 400,
+                            minWidth: 400,
+                            display: 'block',
+                            wordBreak: 'break-all'
                         }}>
                         {
                             <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -533,6 +567,7 @@ function ListCard(props) {
                             </Box>
                         }
                     </Card>
+                    <Box style={{paddingBottom: "5%"}} ></Box>
                     { !store.communityListsSelected ? <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography> :
                     <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography> }
                     { !store.communityListsSelected ? <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography> :
@@ -540,8 +575,26 @@ function ListCard(props) {
                     }
                 </Box>
                 </Grid>
+                <Grid item>
+                <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
+                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
+                            <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfLikes}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
+                            <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
+                        </IconButton>
+                        {list.numberOfDislikes}
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
+                        Views:
+                    </Typography>
+                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
+                </Grid>
                 <Grid item sx={{pl: 1, flexShrink: 1}} >
-                    <List style={{maxHeight: '100vh', overflow: 'scroll'}}>
+                    <Box style={{paddingTop: '2%'}}/>
+                    <List style={{ minWidth: 400, maxWidth: 400, maxHeight: 350, overflow: 'scroll'}}>
                         {
                             list.comments.map((item) => (
                                 <Card
@@ -551,7 +604,9 @@ function ListCard(props) {
                                     borderRadius: 15,
                                     backgroundColor: "#d8ac34",
                                     color: "#302c74",
-                                    alignItems: "flex-start"
+                                    alignItems: "flex-start",
+                                    display: 'block',
+                                    wordBreak: 'break-all'
                                 }}>
                                     <CardContent sx={{ flex: '1 0 auto' }}>
                                         <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
@@ -584,24 +639,8 @@ function ListCard(props) {
                     }
                 </Grid>
                 <Grid item>
-                    <Typography variant="h1" style={{ fontWeight: 'bold', fontSize: '17pt'}} >
-                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleLike}>
-                            <ThumbUpOutlinedIcon style={{fontSize:'30pt'}} />
-                        </IconButton>
-                        {list.numberOfLikes}
-                        <IconButton disabled={auth.loggedInAsGuest} disableRipple={true} onClick={handleDislike}>
-                            <ThumbDownOutlinedIcon style={{fontSize:'30pt'}} />
-                        </IconButton>
-                        {list.numberOfDislikes}
-                    </Typography>
-                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt'}} >
-                        Views:
-                    </Typography>
-                    <Typography variant="h2" display="inline" style={{ fontSize: '12pt', color: 'red'}}>{" "+list.numberOfViews}</Typography>
-                </Grid>
-                <Grid item>
                     { store.homeSelected ?
-                        <Box>
+                        <Box style={{ alignSelf:"flex-end" }} >
                             <IconButton disableRipple={true} onClick={(event) => {
                                 handleDeleteList(event, list._id)
                             }} aria-label='delete'>
