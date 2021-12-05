@@ -88,14 +88,8 @@ registerUser = async (req, res) => {
             firstName: firstName, lastName: lastName, userName: userName, email: email, passwordHash: passwordHash
         });
         const savedUser = await newUser.save();
-
-        // LOGIN THE USER
-        const token = auth.signToken(savedUser);
-        await res.cookie("token", token, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none"
-        }).status(200).json({
+        
+        return res.status(200).json({
             success: true,
             user: {
                 firstName: savedUser.firstName,
