@@ -94,7 +94,7 @@ export default function RegisterScreen() {
                                         id="username"
                                         label="Username"
                                         name="userName"
-                                        autoComplete="usernames"
+                                        autoComplete="username"
                                     />
                                 </Grid>
                                 <Grid item xs={12}>

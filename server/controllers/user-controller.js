@@ -107,15 +107,15 @@ registerUser = async (req, res) => {
 
 loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        if(email.trim() === "" && password.length === 0)
-            return res.status(400).json({errorMessage: "Please enter an email and password."});
-        else if(email.trim() === "")
-            return res.status(400).json({errorMessage: "Please enter an email."});
+        const { userName, password } = req.body;
+        if(userName.trim() === "" && password.length === 0)
+            return res.status(400).json({errorMessage: "Please enter a username and password."});
+        else if(userName.trim() === "")
+            return res.status(400).json({errorMessage: "Please enter a username."});
         else if(password.length === 0)
             return res.status(400).json({errorMessage: "Please enter a password."});
         else {
-            const existingUser = await User.findOne({ email: email });
+            const existingUser = await User.findOne({ userName: userName });
             if (existingUser) {
                 const validPass = await bcrypt.compare(password, existingUser.passwordHash);
                 if(validPass) {
@@ -136,11 +136,11 @@ loginUser = async (req, res) => {
                     }).send();
                 }
                 else {
-                    return res.status(400).json({ errorMessage: "Incorrect email and/or password." });
+                    return res.status(400).json({ errorMessage: "Incorrect username and/or password." });
                 }
             }
             else {
-                return res.status(400).json({ errorMessage: "Incorrect email and/or password." });
+                return res.status(400).json({ errorMessage: "Incorrect username and/or password." });
             }
         }
     } catch (err) {
