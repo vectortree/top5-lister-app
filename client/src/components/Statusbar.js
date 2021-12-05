@@ -40,34 +40,34 @@ function Statusbar() {
         else if(store.allListsSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== "" && store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
+                    <Typography style={{ fontSize: 35}}>{store.searchBarText !== "" && store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
                 </div>;
         else if(store.usersSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== ""  && store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
+                    <Typography style={{ fontSize: 35}}>{store.searchBarText !== ""  && store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
                 </div>;
         else if(store.communityListsSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">Community Lists</Typography>
+                    <Typography style={{ fontSize: 35}}>Community Lists</Typography>
                 </div>;
     }
     else if(auth.loggedInAsGuest) {
         if(store.allListsSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== "" && store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
+                    <Typography style={{ fontSize: 35}}>{store.searchBarText !== "" && store.lists.length !== 0 ? store.searchBarText+" Lists" : "All Lists"}</Typography>
                 </div>;
         else if(store.usersSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">{store.searchBarText !== ""  && store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
+                    <Typography style={{ fontSize: 35}}>{store.searchBarText !== ""  && store.lists.length !== 0 ? store.searchBarText+" Lists" : "Users Lists"}</Typography>
                 </div>;
         else if(store.communityListsSelected)
             statusbar =
                 <div id="top5-statusbar">
-                    <Typography variant="h2">Community Lists</Typography>
+                    <Typography style={{ fontSize: 35}}>Community Lists</Typography>
                 </div>;
     }
     return (
