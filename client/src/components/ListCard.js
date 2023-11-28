@@ -174,7 +174,7 @@ function ListCard(props) {
                 <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
                     <Grid item>       
                     <Box sx={{ pl: 1, flexGrow: 1 }}>
-                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
                         <Typography variant="subtitle1" style={{ fontSize: '12pt'}}></Typography>
                         <Box style={{paddingBottom: "34%"}} ></Box>
                         <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} display="inline">Updated:</Typography>
@@ -235,7 +235,7 @@ function ListCard(props) {
                 <Grid container container wrap='nowrap' direction="row" justifyContent="space-between">     
                     <Grid item>
                     <Box sx={{ pl: 1, flexGrow: 1 }} >
-                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
                         <Card
                             fullWidth
                             id={list._id}
@@ -249,7 +249,7 @@ function ListCard(props) {
                                 maxWidth: 400,
                                 minWidth: 400,
                                 display: 'block',
-                                wordBreak: 'break-all'
+                                wordBreak: 'break-word'
                             }}>
                             {
                                 <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -313,7 +313,7 @@ function ListCard(props) {
                                         color: "#302c74",
                                         alignItems: "flex-start",
                                         display: 'block',
-                                        wordBreak: 'break-all'
+                                        wordBreak: 'break-word'
                                     }}>
                                         <CardContent sx={{ flex: '1 0 auto' }}>
                                             <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
@@ -373,8 +373,8 @@ function ListCard(props) {
             <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
                 <Grid item>       
                     <Box sx={{ pl: 1, flexGrow: 1 }}>
-                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                        <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                        <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
+                        <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                         <Typography component={Link} to='#' onClick={(event) => {handleLoadList(event, list._id)}} variant="subtitle1" style={{ fontSize: '12pt', color: 'red' }} >Edit</Typography>
                     </Box>
                 </Grid>
@@ -411,8 +411,8 @@ function ListCard(props) {
             <Grid container container wrap='nowrap' direction="row" justifyContent="space-between">
             <Grid item>
             <Box sx={{ pl: 1, flexGrow: 1 }}>
-                <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
+                <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                 <Card
                     fullWidth
                     id={list._id}
@@ -426,7 +426,7 @@ function ListCard(props) {
                         maxWidth: 400,
                         minWidth: 400,
                         display: 'block',
-                        wordBreak: 'break-all'
+                        wordBreak: 'break-word'
                     }}>
                     {
                         <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -475,8 +475,8 @@ function ListCard(props) {
             <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
                 <Grid item>       
                 <Box sx={{ pl: 1, flexGrow: 1 }}>
-                    <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                    <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
+                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                     { !store.communityListsSelected ? <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Published:</Typography> :
                     <Typography variant="subtitle1" style={{ fontSize: '12pt' }} display="inline">Updated:</Typography> }
                     { !store.communityListsSelected ? <Typography color="#80bc7c" variant="subtitle1" style={{ fontSize: '12pt' }} display="inline" >{" " + moment(list.publishedDate).format('MMM D, YYYY')}</Typography> :
@@ -538,8 +538,8 @@ function ListCard(props) {
             <Grid container container wrap='nowrap' direction="row" justifyContent="space-between" alignItems="flex-center">     
                 <Grid item>       
                 <Box sx={{ pl: 1, flexGrow: 1 }}>
-                    <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt' }} >{list.name}</Typography>
-                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt' }} >By: <Link to='#'>{list.userName}</Link></Typography>
+                    <Typography variant="title" style={{ fontWeight: 'bold', fontSize: '17pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >{list.name}</Typography>
+                    <Typography variant="subtitle1" style={{ padding: '10px 0', fontSize: '12pt', display: 'block', maxWidth: 400, wordBreak: 'break-word' }} >By: <Link to='#'>{list.userName}</Link></Typography>
                     <Card
                         fullWidth
                         id={list._id}
@@ -553,7 +553,7 @@ function ListCard(props) {
                             maxWidth: 400,
                             minWidth: 400,
                             display: 'block',
-                            wordBreak: 'break-all'
+                            wordBreak: 'break-word'
                         }}>
                         {
                             <Box sx={{pl: 1, flexGrow: 1 }}>
@@ -604,7 +604,7 @@ function ListCard(props) {
                                     color: "#302c74",
                                     alignItems: "flex-start",
                                     display: 'block',
-                                    wordBreak: 'break-all'
+                                    wordBreak: 'break-word'
                                 }}>
                                     <CardContent sx={{ flex: '1 0 auto' }}>
                                         <Typography component="div" variant="title" style={{ fontSize: '12pt'}}>
