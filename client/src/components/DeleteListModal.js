@@ -47,7 +47,7 @@ export default function DeleteListModal(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography style={{display: 'block', maxWidth: 400, wordBreak: 'break-word'}} id="modal-modal-title" variant="h6" component="h2">
               Delete the {name} Top 5 List?
           </Typography>
           <Grid container justifyContent="flex-end">
